@@ -3,7 +3,7 @@ package br.com.integrado.api.entities;
 import javax.persistence.Embeddable;
 
 
-@Embeddable
+@Embeddable  
 public class CPFModel {
 	
 	private String CPF;

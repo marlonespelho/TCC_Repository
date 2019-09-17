@@ -25,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.integrado.api.dtos.FuncionarioDTO;
-import br.com.integrado.api.dtos.FuncionarioDTO;
 import br.com.integrado.api.entities.CPFModel;
-import br.com.integrado.api.entities.FuncionarioModel;
 import br.com.integrado.api.entities.FuncionarioModel;
 import br.com.integrado.api.enums.PerfilEnum;
 import br.com.integrado.api.responses.Response;
