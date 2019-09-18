@@ -7,6 +7,8 @@ import javax.persistence.NamedQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
@@ -42,5 +44,9 @@ public interface AgendamentoRepository extends JpaRepository<AgendamentoModel, L
 																@Param("id") Long id);
 
 	Page<AgendamentoModel> findByStatus(Pageable pageable, StatusAgendamentoEnum status);
+
+	@Modifying
+	@Query("DELETE FROM AgendamentoModel ag WHERE ag.agenda.data = :data AND ag.status = :status")
+	void deleteByAgendaDataAndPerfil( @Param("data") Date dataAtual, @Param("status") StatusAgendamentoEnum status);
 
 }

@@ -11,10 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import br.com.integrado.api.dtos.AgendamentoDTO;
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
 import br.com.integrado.api.enums.StatusAgendamentoEnum;
 import br.com.integrado.api.repositories.AgendamentoRepository;
+import br.com.integrado.api.utils.DataUtils;
 
 @Service
 public class AgendamentosService {
@@ -25,7 +27,7 @@ public class AgendamentosService {
 		return this.agendamentoRepository.save(agendamento);
 	}
 	
-	public void delete(Long id) {
+	public void deletar(Long id) {
 		this.agendamentoRepository.deleteById(id);
 	}
 	
@@ -80,6 +82,15 @@ public class AgendamentosService {
 	public List<AgendamentoModel> buscarPorAgenda(AgendaModel agenda){
 		List<AgendamentoModel> agendamentos = this.agendamentoRepository.findByAgenda(agenda);
 		return agendamentos;
+	}
+
+	public void deletarAgendamentosAbertos() {
+		Date dataAtual = new DataUtils().zerarHoras(new Date());
+		this.agendamentoRepository.deleteByAgendaDataAndPerfil(dataAtual, StatusAgendamentoEnum.ABERTO);
+	}
+
+	public Page<AgendamentoModel> buscarTodos(PageRequest pageRequest) {
+		return this.agendamentoRepository.findAll(pageRequest);
 	}
 
 }

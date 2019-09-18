@@ -2,19 +2,19 @@ package br.com.integrado.api.dtos;
 
 import br.com.integrado.api.enums.StatusAgendamentoEnum;
 
-public class AgendamentoDto {
+public class AgendamentoDTO {
 	private Long id;
 	private Long agenda;
 	private Long cliente;
 	private String horaInicio;
 	private String horaFim;
-	private StatusAgendamentoEnum status;
+	private int status;
 	
-	public AgendamentoDto() {
+	public AgendamentoDTO() {
 	}
 	
-	public AgendamentoDto(Long agenda, Long cliente, String horaInicio, String horaFim,
-			StatusAgendamentoEnum status) {
+	public AgendamentoDTO(Long agenda, Long cliente, String horaInicio, String horaFim,
+			int status) {
 		this.agenda = agenda;
 		this.cliente = cliente;
 		this.horaInicio = horaInicio;
@@ -22,8 +22,8 @@ public class AgendamentoDto {
 		this.status = status;
 	}
 	
-	public AgendamentoDto(Long id, Long agenda, Long cliente, String horaInicio, String horaFim,
-			StatusAgendamentoEnum status) {
+	public AgendamentoDTO(Long id, Long agenda, Long cliente, String horaInicio, String horaFim,
+			int status) {
 		this.id = id;
 		this.agenda = agenda;
 		this.cliente = cliente;
@@ -62,10 +62,10 @@ public class AgendamentoDto {
 	public void setHoraFim(String horaFim) {
 		this.horaFim = horaFim;
 	}
-	public StatusAgendamentoEnum getStatus() {
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(StatusAgendamentoEnum status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	
