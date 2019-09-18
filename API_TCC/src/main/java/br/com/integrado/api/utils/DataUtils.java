@@ -60,6 +60,15 @@ public class DataUtils {
 			return null;
 		}
 	}
+	
+	public Date zerarHoras(Date data) {
+		try {
+			this.formatter = new SimpleDateFormat("yyyy/MM/dd");
+			return this.formatter.parse(formatter.format(data));
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	public @NotEmpty String DataParaHora(Date data) {
 		try {
