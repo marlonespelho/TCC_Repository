@@ -93,6 +93,7 @@ public class AgendamentoController {
 		for (AgendamentoDTO agendamentoDto : agendamentosDto) {
 			this.verificarAgendamentoExistente(agendamentoDto.getId(), result);
 			agendamentos.add(this.converterDtoParaAgendamento(agendamentoDto, result));
+			
 		}		
 		if (result.hasErrors()) {
 			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
@@ -276,9 +277,15 @@ public class AgendamentoController {
 			return null;
 		}
 		if (cliente != null) {
-			return new AgendamentoModel(agenda, cliente, this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
+			return new AgendamentoModel(agendamentoDto.getId(),agenda, cliente, 
+										this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
 										this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
 										StatusAgendamentoEnum.ObterStatusPorId(agendamentoDto.getStatus()));
+		}
+		if (agendamentoDto.getId() != null) {
+			return new AgendamentoModel(agenda, this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
+					this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
+					StatusAgendamentoEnum.ObterStatusPorId(agendamentoDto.getStatus()));
 		}
 		return new AgendamentoModel(agenda, this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
 									this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
