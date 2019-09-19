@@ -86,11 +86,16 @@ public class AgendamentosService {
 
 	public void deletarAgendamentosAbertos() {
 		Date dataAtual = new DataUtils().zerarHoras(new Date());
-		this.agendamentoRepository.deleteByAgendaDataAndPerfil(dataAtual, StatusAgendamentoEnum.ABERTO);
+		this.agendamentoRepository.deleteByAgendaDataAndStatus(dataAtual, StatusAgendamentoEnum.ABERTO);
 	}
 
 	public Page<AgendamentoModel> buscarTodos(PageRequest pageRequest) {
 		return this.agendamentoRepository.findAll(pageRequest);
+	}
+
+	public Page<AgendamentoModel> buscarPorStatusEClienteId(PageRequest pageRequest,
+			StatusAgendamentoEnum status, Long id) {
+		return this.agendamentoRepository.findByStatusAndClienteId(pageRequest, status, id);
 	}
 
 }

@@ -2,6 +2,7 @@ package br.com.integrado.api.controllers;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -151,13 +152,116 @@ public class AgendamentoController {
 		response.setData(agendamentosDto);
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping(value = "/agenda-id/{id}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorAgenda( 
+			@PathVariable("id") Long id,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorAgendaId(pageRequest, id);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
 
+	@GetMapping(value = "/cliente-id/{id}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorCliente( 
+			@PathVariable("id") Long id,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorClienteId(pageRequest, id);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping(value = "/funcionario-id/{id}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorFuncionario( 
+			@PathVariable("id") Long id,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorFuncionarioId(pageRequest, id);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(value = "/funcionario-id/{id}/data/{data}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorFuncionarioEData( 
+			@PathVariable("id") Long id,
+			@PathVariable("data") Date data,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorFuncionarioIdEData(pageRequest, id, data);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(value = "/funcionario-id/{id}/status/{status}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorStatusEFuncionario( 
+			@PathVariable("id") Long id,
+			@PathVariable("status") Integer status,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatusEFuncionarioId(pageRequest, 
+																StatusAgendamentoEnum.ObterStatusPorId(status), id);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(value = "/status/{status}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorStatus( 
+			@PathVariable("id") Integer status,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatus(pageRequest, 
+																StatusAgendamentoEnum.ObterStatusPorId(status));
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(value = "/cliente-id/{id}/status/{status}")
+	public ResponseEntity<Response<Page<AgendamentoDTO>>> buscarPorClienteEStatus( 
+			@PathVariable("id") Long id,
+			@PathVariable("status") Integer status,
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
+			@RequestParam(value = "ord", defaultValue = "id") String ord,
+			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
+		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
+		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
+		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatusEClienteId(pageRequest, 
+																StatusAgendamentoEnum.ObterStatusPorId(status), id);
+		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
+		response.setData(agendamentosDto);
+		return ResponseEntity.ok(response);
+	}
+	
 	private void verificarAgendamentoExistente(Long id, BindingResult result) {
 		if (!this.agendamentoService.buscarPorId(id).isPresent()) {
 			result.addError(new ObjectError("Agendamento", "Agendamento informado não encontrado"));
 		}
 	}
-	
 	
 	private AgendamentoDTO converterAgendamentoParaDto(AgendamentoModel agendamento) {
 		return new AgendamentoDTO(agendamento.getId(), agendamento.getAgenda().getId(), 
