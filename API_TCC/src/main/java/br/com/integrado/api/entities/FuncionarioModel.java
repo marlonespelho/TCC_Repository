@@ -7,7 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import br.com.integrado.api.enums.PerfilEnum;
+import br.com.integrado.api.enums.PerfilUsuario;
 
 @Entity
 @Table(name = "funcionario")
@@ -15,7 +15,7 @@ import br.com.integrado.api.enums.PerfilEnum;
 public class FuncionarioModel extends PessoaModel {
 
 	private static final long serialVersionUID = 5575149722123731021L;
-	private PerfilEnum perfil;
+	private PerfilUsuario perfil;
 	private String usuario;
 	private String senha;
 	private CPFModel cpf;
@@ -23,7 +23,7 @@ public class FuncionarioModel extends PessoaModel {
 	public FuncionarioModel() {
 	}
 	
-	public FuncionarioModel(Long id, String nome, Boolean inAtivo, PerfilEnum perfil, String usuario, String senha,CPFModel cpf) {
+	public FuncionarioModel(Long id, String nome, Boolean inAtivo, PerfilUsuario perfil, String usuario, String senha,CPFModel cpf) {
 		super(id, nome, inAtivo);
 		this.perfil = perfil;
 		this.usuario = usuario;
@@ -31,7 +31,7 @@ public class FuncionarioModel extends PessoaModel {
 		this.cpf = cpf;
 	}
 
-	public FuncionarioModel(String nome, Boolean inAtivo, PerfilEnum perfil, String usuario, String senha, CPFModel cpf) {
+	public FuncionarioModel(String nome, Boolean inAtivo, PerfilUsuario perfil, String usuario, String senha, CPFModel cpf) {
 		super(nome, inAtivo);
 		this.perfil = perfil;
 		this.usuario = usuario;
@@ -41,10 +41,10 @@ public class FuncionarioModel extends PessoaModel {
 
 	@Enumerated(EnumType.ORDINAL)
 	@Column(nullable = false)
-	public PerfilEnum getPerfil() {
+	public PerfilUsuario getPerfil() {
 		return perfil;
 	}
-	public void setPerfil(PerfilEnum perfil) {
+	public void setPerfil(PerfilUsuario perfil) {
 		this.perfil = perfil;
 	}
 	

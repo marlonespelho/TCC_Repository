@@ -34,7 +34,7 @@ import br.com.integrado.api.dtos.AgendamentoDTO;
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
 import br.com.integrado.api.entities.ClienteModel;
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 import br.com.integrado.api.responses.Response;
 import br.com.integrado.api.service.AgendaService;
 import br.com.integrado.api.service.AgendamentosService;
@@ -221,7 +221,7 @@ public class AgendamentoController {
 		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
 		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
 		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatusEFuncionarioId(pageRequest, 
-																StatusAgendamentoEnum.ObterStatusPorId(status), id);
+																StatusAgendamento.ObterStatusPorId(status), id);
 		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
 		response.setData(agendamentosDto);
 		return ResponseEntity.ok(response);
@@ -236,7 +236,7 @@ public class AgendamentoController {
 		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
 		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
 		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatus(pageRequest, 
-																StatusAgendamentoEnum.ObterStatusPorId(status));
+																StatusAgendamento.ObterStatusPorId(status));
 		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
 		response.setData(agendamentosDto);
 		return ResponseEntity.ok(response);
@@ -252,7 +252,7 @@ public class AgendamentoController {
 		Response<Page<AgendamentoDTO>> response = new Response<Page<AgendamentoDTO>>();
 		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
 		Page<AgendamentoModel> agendamentos = this.agendamentoService.buscarPorStatusEClienteId(pageRequest, 
-																StatusAgendamentoEnum.ObterStatusPorId(status), id);
+																StatusAgendamento.ObterStatusPorId(status), id);
 		Page<AgendamentoDTO> agendamentosDto = agendamentos.map(agenda -> this.converterAgendamentoParaDto(agenda));
 		response.setData(agendamentosDto);
 		return ResponseEntity.ok(response);
@@ -280,16 +280,16 @@ public class AgendamentoController {
 			return new AgendamentoModel(agendamentoDto.getId(),agenda, cliente, 
 										this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
 										this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
-										StatusAgendamentoEnum.ObterStatusPorId(agendamentoDto.getStatus()));
+										StatusAgendamento.ObterStatusPorId(agendamentoDto.getStatus()));
 		}
 		if (agendamentoDto.getId() != null) {
 			return new AgendamentoModel(agenda, this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
 					this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
-					StatusAgendamentoEnum.ObterStatusPorId(agendamentoDto.getStatus()));
+					StatusAgendamento.ObterStatusPorId(agendamentoDto.getStatus()));
 		}
 		return new AgendamentoModel(agenda, this.dataUtils.StringParaHora(agendamentoDto.getHoraInicio()), 
 									this.dataUtils.StringParaHora(agendamentoDto.getHoraFim()), 
-									StatusAgendamentoEnum.ObterStatusPorId(agendamentoDto.getStatus()));
+									StatusAgendamento.ObterStatusPorId(agendamentoDto.getStatus()));
 	}
 
 	private ClienteModel verificarClienteExistente(Long id, BindingResult result) {

@@ -1,11 +1,11 @@
 package br.com.integrado.api.enums;
 
-public enum PerfilEnum {
+public enum PerfilUsuario {
 	ROLE_ADMIN(1), ROLE_USUARIO(2);
 	
 	private int perfilEnum;
 	
-	PerfilEnum(int perfil) {
+	PerfilUsuario(int perfil) {
 		this.perfilEnum = perfil;
 	}
 	
@@ -13,9 +13,9 @@ public enum PerfilEnum {
 		return perfilEnum;
 	}
 
-	public static PerfilEnum obterPerfilPeloId(Integer id) {
+	public static PerfilUsuario obterPerfilPeloId(Integer id) {
 		try {
-			for(PerfilEnum perfil : values()) {
+			for(PerfilUsuario perfil : values()) {
 				if (perfil.perfilEnum == id) {
 					return perfil;
 				}

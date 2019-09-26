@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import br.com.integrado.api.enums.TipoMovimentacao;
 @Entity
 @Table(name = "item_movimentacao")
 public class ItensMovEstoqueModel implements Serializable{
@@ -23,26 +22,22 @@ public class ItensMovEstoqueModel implements Serializable{
 	private ProdutoModel produto;
 	private MovEstoqueModel movEstoque;
 	private Integer quantidade;
-	private TipoMovimentacao tipo;
+
 	
 	public ItensMovEstoqueModel() {
 	}
 	
-	public ItensMovEstoqueModel(ProdutoModel produto, MovEstoqueModel movEstoque, Integer quantidade,
-			TipoMovimentacao tipo) {
+	public ItensMovEstoqueModel(ProdutoModel produto, MovEstoqueModel movEstoque, Integer quantidade) {
 		this.produto = produto;
 		this.movEstoque = movEstoque;
 		this.quantidade = quantidade;
-		this.tipo = tipo;
 	}
 	
-	public ItensMovEstoqueModel(Long id, ProdutoModel produto, MovEstoqueModel movEstoque, Integer quantidade,
-			TipoMovimentacao tipo) {
+	public ItensMovEstoqueModel(Long id, ProdutoModel produto, MovEstoqueModel movEstoque, Integer quantidade) {
 		this.id = id;
 		this.produto = produto;
 		this.movEstoque = movEstoque;
 		this.quantidade = quantidade;
-		this.tipo = tipo;
 	}
 	
 	@Id
@@ -80,18 +75,10 @@ public class ItensMovEstoqueModel implements Serializable{
 		this.quantidade = quantidade;
 	}
 	
-	@Enumerated(EnumType.ORDINAL)
-	public TipoMovimentacao getTipo() {
-		return tipo;
-	}
-	public void setTipo(TipoMovimentacao tipo) {
-		this.tipo = tipo;
-	}
-	
 	@Override
 	public String toString() {
 		return "ItensMovEstoqueModel [id=" + id + ", produto=" + produto + ", movEstoque=" + movEstoque
-				+ ", quantidade=" + quantidade + ", tipo=" + tipo + "]";
+				+ ", quantidade=" + quantidade + "]";
 	}
 	
 }

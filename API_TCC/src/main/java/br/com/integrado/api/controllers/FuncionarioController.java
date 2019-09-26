@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.integrado.api.dtos.FuncionarioDTO;
 import br.com.integrado.api.entities.CPFModel;
 import br.com.integrado.api.entities.FuncionarioModel;
-import br.com.integrado.api.enums.PerfilEnum;
+import br.com.integrado.api.enums.PerfilUsuario;
 import br.com.integrado.api.responses.Response;
 import br.com.integrado.api.service.FuncionarioService;
 import br.com.integrado.api.utils.SenhaUtils;
@@ -190,7 +190,7 @@ public class FuncionarioController {
 
 	private FuncionarioModel converterDtoParaFuncionario(@Valid FuncionarioDTO funcionarioDto) {
 		return new FuncionarioModel(funcionarioDto.getNome(), funcionarioDto.getInAtivo(), 
-									PerfilEnum.obterPerfilPeloId(funcionarioDto.getPerfil()), 
+									PerfilUsuario.obterPerfilPeloId(funcionarioDto.getPerfil()), 
 									funcionarioDto.getUsuario(), SenhaUtils.gerarBCrypt(funcionarioDto.getSenha()), 
 									new CPFModel(funcionarioDto.getCpf()));
 	}

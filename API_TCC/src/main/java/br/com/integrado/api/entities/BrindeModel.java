@@ -23,26 +23,29 @@ public class BrindeModel implements Serializable{
 	private ServicoModel servico;
 	private Integer contadorBrinde;
 	private Date dataBrindeAniversario;
+	private BrindeConfigModel brindeConfig;
 	
 	public BrindeModel() {
 
 	}
 	
-	public BrindeModel(ClienteModel cliente, ServicoModel servico, Integer contadorBrinde, Date dataBrindeAniversario) {
+	public BrindeModel(ClienteModel cliente, ServicoModel servico, Integer contadorBrinde, Date dataBrindeAniversario, BrindeConfigModel brindeConfig) {
 		this.cliente = cliente;
 		this.servico = servico;
 		this.contadorBrinde = contadorBrinde;
 		this.dataBrindeAniversario = dataBrindeAniversario;
+		this.brindeConfig = brindeConfig;
 	}
 
 	
 	public BrindeModel(Long id, ClienteModel cliente, ServicoModel servico, Integer contadorBrinde,
-			Date dataBrindeAniversario) {
+			Date dataBrindeAniversario, BrindeConfigModel brindeConfig) {
 		this.id = id;
 		this.cliente = cliente;
 		this.servico = servico;
 		this.contadorBrinde = contadorBrinde;
 		this.dataBrindeAniversario = dataBrindeAniversario;
+		this.brindeConfig = brindeConfig;
 	}
 
 	@Id
@@ -90,6 +93,16 @@ public class BrindeModel implements Serializable{
 		this.dataBrindeAniversario = dataBrindeAniversario;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name = "brinde_config")
+	public BrindeConfigModel getBrindeConfig() {
+		return brindeConfig;
+	}
+
+	public void setBrindeConfig(BrindeConfigModel brindeConfig) {
+		this.brindeConfig = brindeConfig;
+	}
+
 	@Override
 	public String toString() {
 		return "BrindeModel [id=" + id + ", cliente=" + cliente + ", servico=" + servico + ", contadorBrinde="

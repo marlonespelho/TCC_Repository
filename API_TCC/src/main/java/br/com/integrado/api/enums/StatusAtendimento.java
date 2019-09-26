@@ -1,5 +1,5 @@
 package br.com.integrado.api.enums;
 
-public enum SituacaoAtendimento {
+public enum StatusAtendimento {
 	ATENDIDO, CADASTRADO, CANCELADO;
 }

@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.integrado.api.entities.ParcelaAtendimentoModel;
 
-public interface ParcelaAtendimentoRepository extends JpaRepository<ParcelaAtendimentoModel, Long> {
+public interface ParcelaAtendimentoRepository extends JpaRepository<ParcelaAtendimentoModel, Long>{
 
 }

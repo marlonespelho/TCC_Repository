@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import br.com.integrado.api.enums.SituacaoAtendimento;
+import br.com.integrado.api.enums.StatusAtendimento;
 
 @Entity
 @Table(name = "atendimento")
@@ -28,7 +28,7 @@ public class AtendimentoModel implements Serializable{
 	private Double valDesconto;
 	private Date dataAtendimento;
 	private Date dataTransacao;
-	private SituacaoAtendimento situacao;
+	private StatusAtendimento situacao;
 	private Date dataFinalPago;
 	private Double valTotal;
 	
@@ -37,7 +37,7 @@ public class AtendimentoModel implements Serializable{
 	}
 	
 	public AtendimentoModel(Long id, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
-			SituacaoAtendimento situacao, Date dataFinalPago, Double valTotal) {
+			StatusAtendimento situacao, Date dataFinalPago, Double valTotal) {
 		this.id = id;
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
@@ -49,7 +49,7 @@ public class AtendimentoModel implements Serializable{
 	}
 	
 	public AtendimentoModel(ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
-			SituacaoAtendimento situacao, Date dataFinalPago, Double valTotal) {
+			StatusAtendimento situacao, Date dataFinalPago, Double valTotal) {
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
@@ -105,10 +105,10 @@ public class AtendimentoModel implements Serializable{
 	
 	@Column
 	@Enumerated(EnumType.ORDINAL)
-	public SituacaoAtendimento getSituacao() {
+	public StatusAtendimento getSituacao() {
 		return situacao;
 	}
-	public void setSituacao(SituacaoAtendimento situacao) {
+	public void setSituacao(StatusAtendimento situacao) {
 		this.situacao = situacao;
 	}
 	

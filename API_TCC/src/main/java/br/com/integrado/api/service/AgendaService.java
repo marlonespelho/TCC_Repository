@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 import br.com.integrado.api.repositories.AgendaRepository;
 
 @Service
@@ -60,7 +60,7 @@ public class AgendaService {
 		}
 		List<AgendamentoModel> agendamentos = this.agendamentosService.buscarPorAgenda(agenda.get());
 		for (AgendamentoModel agendamento : agendamentos) {
-			if (agendamento.getStatus() != StatusAgendamentoEnum.ABERTO) {
+			if (agendamento.getStatus() != StatusAgendamento.ABERTO) {
 				return false;
 			}
 		}

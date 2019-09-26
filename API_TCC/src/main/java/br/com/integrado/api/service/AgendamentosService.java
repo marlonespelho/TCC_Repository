@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import br.com.integrado.api.dtos.AgendamentoDTO;
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 import br.com.integrado.api.repositories.AgendamentoRepository;
 import br.com.integrado.api.utils.DataUtils;
 
@@ -44,7 +44,7 @@ public class AgendamentosService {
 		fimHorario.add(Calendar.MINUTE, 30);
 		for (int i = 1; i <= quantHorarios; i++) {
 			AgendamentoModel agendamento = new AgendamentoModel(agenda, inicioHorario.getTime(), 
-					fimHorario.getTime(), StatusAgendamentoEnum.ABERTO);
+					fimHorario.getTime(), StatusAgendamento.ABERTO);
 			this.agendamentoRepository.save(agendamento);
 			inicioHorario.add(Calendar.MINUTE, 30);
 			fimHorario.add(Calendar.MINUTE, 30);
@@ -71,11 +71,11 @@ public class AgendamentosService {
 		return this.agendamentoRepository.findByAgendaFuncionarioIdAndAgendaData(pageRequest, id, data);
 	}
 	
-	public Page<AgendamentoModel> buscarPorStatusEFuncionarioId(PageRequest pageRequest, StatusAgendamentoEnum status, Long id){
+	public Page<AgendamentoModel> buscarPorStatusEFuncionarioId(PageRequest pageRequest, StatusAgendamento status, Long id){
 		return this.agendamentoRepository.findByStatusAndAgendaFuncionarioId(pageRequest, status, id);
 	}
 	
-	public Page<AgendamentoModel> buscarPorStatus(PageRequest pageRequest, StatusAgendamentoEnum status){
+	public Page<AgendamentoModel> buscarPorStatus(PageRequest pageRequest, StatusAgendamento status){
 		return this.agendamentoRepository.findByStatus(pageRequest, status);
 	}
 	
@@ -86,7 +86,7 @@ public class AgendamentosService {
 
 	public void deletarAgendamentosAbertos() {
 		Date dataAtual = new DataUtils().zerarHoras(new Date());
-		this.agendamentoRepository.deleteByAgendaDataAndStatus(dataAtual, StatusAgendamentoEnum.ABERTO);
+		this.agendamentoRepository.deleteByAgendaDataAndStatus(dataAtual, StatusAgendamento.ABERTO);
 	}
 
 	public Page<AgendamentoModel> buscarTodos(PageRequest pageRequest) {
@@ -94,7 +94,7 @@ public class AgendamentosService {
 	}
 
 	public Page<AgendamentoModel> buscarPorStatusEClienteId(PageRequest pageRequest,
-			StatusAgendamentoEnum status, Long id) {
+			StatusAgendamento status, Long id) {
 		return this.agendamentoRepository.findByStatusAndClienteId(pageRequest, status, id);
 	}
 

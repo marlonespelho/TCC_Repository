@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import br.com.integrado.api.entities.AgendaModel;
 import br.com.integrado.api.entities.AgendamentoModel;
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 
 @NamedQueries({
 	@NamedQuery(name = "AgendamentoRepository.findByAgendaId",
@@ -43,15 +43,15 @@ public interface AgendamentoRepository extends JpaRepository<AgendamentoModel, L
 
 	Page<AgendamentoModel> findByAgendaFuncionarioIdAndAgendaData(Pageable pageable, @Param("id") Long id, @Param("data") Date data);
 
-	Page<AgendamentoModel> findByStatusAndAgendaFuncionarioId(Pageable pageable, @Param("status") StatusAgendamentoEnum status,
+	Page<AgendamentoModel> findByStatusAndAgendaFuncionarioId(Pageable pageable, @Param("status") StatusAgendamento status,
 																@Param("id") Long id);
 
-	Page<AgendamentoModel> findByStatus(Pageable pageable, StatusAgendamentoEnum status);
+	Page<AgendamentoModel> findByStatus(Pageable pageable, StatusAgendamento status);
 
 	@Modifying
 	@Query("DELETE FROM AgendamentoModel ag WHERE ag.agenda.data = :data AND ag.status = :status")
-	void deleteByAgendaDataAndStatus(@Param("data") Date dataAtual, @Param("status") StatusAgendamentoEnum status);
+	void deleteByAgendaDataAndStatus(@Param("data") Date dataAtual, @Param("status") StatusAgendamento status);
 
-	Page<AgendamentoModel> findByStatusAndClienteId(Pageable pageable, StatusAgendamentoEnum status, Long id);
+	Page<AgendamentoModel> findByStatusAndClienteId(Pageable pageable, StatusAgendamento status, Long id);
 
 }

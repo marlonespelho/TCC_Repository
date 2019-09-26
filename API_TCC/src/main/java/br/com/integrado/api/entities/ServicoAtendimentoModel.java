@@ -14,6 +14,10 @@ import javax.persistence.Table;
 
 import br.com.integrado.api.enums.TipoBrinde;
 
+/**
+ * @author marlo
+ *
+ */
 @Entity
 @Table(name = "servico_atendimento")
 public class ServicoAtendimentoModel implements Serializable{
@@ -24,21 +28,25 @@ public class ServicoAtendimentoModel implements Serializable{
 	private ServicoModel servico;
 	private Integer quantidade;
 	private Double val_servico;
-	private TipoBrinde brinde;
+	private BrindeGanhoModel brindeGranho;
+	private AtendimentoModel atendimento;
 	
 	public ServicoAtendimentoModel(Long id, ServicoModel servico, Integer quantidade, Double val_servico,
-			TipoBrinde brinde) {
+			BrindeGanhoModel brindeGranho, AtendimentoModel atendimento) {
 		this.id = id;
 		this.servico = servico;
 		this.quantidade = quantidade;
 		this.val_servico = val_servico;
-		this.brinde = brinde;
+		this.brindeGranho = brindeGranho;
+		this.atendimento = atendimento;
 	}
-	public ServicoAtendimentoModel(ServicoModel servico, Integer quantidade, Double val_servico, TipoBrinde brinde) {
+	public ServicoAtendimentoModel(ServicoModel servico, Integer quantidade, Double val_servico, BrindeGanhoModel brindeGranho, 
+			AtendimentoModel atendimento) {
 		this.servico = servico;
 		this.quantidade = quantidade;
 		this.val_servico = val_servico;
-		this.brinde = brinde;
+		this.brindeGranho = brindeGranho;
+		this.atendimento = atendimento;
 	}
 	
 	public ServicoAtendimentoModel() {
@@ -78,19 +86,28 @@ public class ServicoAtendimentoModel implements Serializable{
 		this.val_servico = val_servico;
 	}
 	
-	@Column
-	@Enumerated(EnumType.ORDINAL)
-	public TipoBrinde getBrinde() {
-		return brinde;
+	@ManyToOne
+	@JoinColumn(name = "id_brinde_ganho", nullable = true)
+	public BrindeGanhoModel getBrindeGranho() {
+		return brindeGranho;
 	}
-	public void setBrinde(TipoBrinde brinde) {
-		this.brinde = brinde;
+	public void setBrindeGranho(BrindeGanhoModel brindeGranho) {
+		this.brindeGranho = brindeGranho;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name = "id_atendimento", nullable = false)
+	public AtendimentoModel getAtendimento() {
+		return atendimento;
+	}
+	public void setAtendimento(AtendimentoModel atendimento) {
+		this.atendimento = atendimento;
+	}
 	@Override
 	public String toString() {
 		return "ServicoAtendimentoModel [id=" + id + ", servico=" + servico + ", quantidade=" + quantidade
-				+ ", val_servico=" + val_servico + ", brinde=" + brinde + "]";
+				+ ", val_servico=" + val_servico + ", brindeGranho=" + brindeGranho + ", atendimento=" + atendimento
+				+ "]";
 	}
 	
 }

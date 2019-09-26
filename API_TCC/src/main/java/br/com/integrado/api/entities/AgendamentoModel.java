@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 @Entity
 @Table(name = "agendamento")
 public class AgendamentoModel implements Serializable{
@@ -27,13 +27,14 @@ public class AgendamentoModel implements Serializable{
 	private ClienteModel cliente;
 	private Date horaInicio;
 	private Date horaFim;
-	private StatusAgendamentoEnum status;
+	private StatusAgendamento status;
+	private AtendimentoModel atendimento;
 	
 	public AgendamentoModel() {
 	}
 
 	public AgendamentoModel(AgendaModel agenda, ClienteModel cliente, Date horaInicio, Date horaFim,
-			StatusAgendamentoEnum status) {
+			StatusAgendamento status) {
 		this.agenda = agenda;
 		this.cliente = cliente;
 		this.horaInicio = horaInicio;
@@ -42,7 +43,7 @@ public class AgendamentoModel implements Serializable{
 	}
 
 	public AgendamentoModel(AgendaModel agenda, Date horaInicio, Date horaFim,
-			StatusAgendamentoEnum status) {
+			StatusAgendamento status) {
 		this.agenda = agenda;
 		this.horaInicio = horaInicio;
 		this.horaFim = horaFim;
@@ -50,13 +51,24 @@ public class AgendamentoModel implements Serializable{
 	}
 	
 	public AgendamentoModel(Long id, AgendaModel agenda, ClienteModel cliente, Date horaInicio, Date horaFim,
-			StatusAgendamentoEnum status) {
+			StatusAgendamento status) {
 		this.id = id;
 		this.agenda = agenda;
 		this.cliente = cliente;
 		this.horaInicio = horaInicio;
 		this.horaFim = horaFim;
 		this.status = status;
+	}
+	
+	public AgendamentoModel(Long id, AgendaModel agenda, ClienteModel cliente, Date horaInicio, Date horaFim,
+			StatusAgendamento status, AtendimentoModel atendimento) {
+		this.id = id;
+		this.agenda = agenda;
+		this.cliente = cliente;
+		this.horaInicio = horaInicio;
+		this.horaFim = horaFim;
+		this.status = status;
+		this.atendimento = atendimento;
 	}
 	
 	@Id
@@ -106,10 +118,10 @@ public class AgendamentoModel implements Serializable{
 	
 	@Column()
 	@Enumerated(EnumType.ORDINAL)
-	public StatusAgendamentoEnum getStatus() {
+	public StatusAgendamento getStatus() {
 		return status;
 	}
-	public void setStatus(StatusAgendamentoEnum status) {
+	public void setStatus(StatusAgendamento status) {
 		this.status = status;
 	}
 

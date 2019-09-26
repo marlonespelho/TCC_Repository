@@ -1,6 +1,6 @@
 package br.com.integrado.api.dtos;
 
-import br.com.integrado.api.enums.StatusAgendamentoEnum;
+import br.com.integrado.api.enums.StatusAgendamento;
 
 public class AgendamentoDTO {
 	private Long id;

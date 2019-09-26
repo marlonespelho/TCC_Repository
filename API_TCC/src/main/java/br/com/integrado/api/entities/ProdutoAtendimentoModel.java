@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "prod_atendimento")
-public class ProdutoAtendiementoModel implements Serializable{
+public class ProdutoAtendimentoModel implements Serializable{
 
 	private static final long serialVersionUID = 1802385557789242447L;
 
@@ -22,10 +22,10 @@ public class ProdutoAtendiementoModel implements Serializable{
 	private Integer quantidade;
 	private Double valUnitario;
 	
-	public ProdutoAtendiementoModel() {
+	public ProdutoAtendimentoModel() {
 	}
 
-	public ProdutoAtendiementoModel(AtendimentoModel atendimento, ProdutoModel produto, Integer quantidade,
+	public ProdutoAtendimentoModel(AtendimentoModel atendimento, ProdutoModel produto, Integer quantidade,
 			Double valUnitario) {
 		this.atendimento = atendimento;
 		this.produto = produto;
@@ -33,7 +33,7 @@ public class ProdutoAtendiementoModel implements Serializable{
 		this.valUnitario = valUnitario;
 	}
 
-	public ProdutoAtendiementoModel(Long id, AtendimentoModel atendimento, ProdutoModel produto, Integer quantidade,
+	public ProdutoAtendimentoModel(Long id, AtendimentoModel atendimento, ProdutoModel produto, Integer quantidade,
 			Double valUnitario) {
 		this.id = id;
 		this.atendimento = atendimento;

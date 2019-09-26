@@ -78,7 +78,7 @@ public class CidadeController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		this.cidadeService.deletar(id);
-		response.setData("Cidade removido da base de dados.");
+		response.setData("Cidade removida da base de dados.");
 		return ResponseEntity.ok(response);
 	}
 	
@@ -99,7 +99,8 @@ public class CidadeController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Response<Page<CidadeDTO>>> buscarTodos(@RequestParam(value = "pag", defaultValue = "0") int pag,
+	public ResponseEntity<Response<Page<CidadeDTO>>> buscarTodos(
+			@RequestParam(value = "pag", defaultValue = "0") int pag,
 			@RequestParam(value = "ord", defaultValue = "id") String ord,
 			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
 		Response<Page<CidadeDTO>> response = new Response<Page<CidadeDTO>>();
