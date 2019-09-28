@@ -30,14 +30,15 @@ public class AtendimentoModel implements Serializable{
 	private Date dataTransacao;
 	private StatusAtendimento situacao;
 	private Date dataFinalPago;
-	private Double valTotal;
+	private Double valTotalProdutos;
+	private Double valTotalServicos;
 	
 	
 	public AtendimentoModel() {
 	}
 	
 	public AtendimentoModel(Long id, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
-			StatusAtendimento situacao, Date dataFinalPago, Double valTotal) {
+			StatusAtendimento situacao, Date dataFinalPago, Double valTotalProdutos, Double valTotalServicos) {
 		this.id = id;
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
@@ -45,18 +46,43 @@ public class AtendimentoModel implements Serializable{
 		this.dataTransacao = dataTransacao;
 		this.situacao = situacao;
 		this.dataFinalPago = dataFinalPago;
-		this.valTotal = valTotal;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
+	}
+	
+	public AtendimentoModel(Long id, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
+			StatusAtendimento situacao, Double valTotalProdutos, Double valTotalServicos) {
+		this.id = id;
+		this.cliente = cliente;
+		this.valDesconto = valDesconto;
+		this.dataAtendimento = dataAtendimento;
+		this.dataTransacao = dataTransacao;
+		this.situacao = situacao;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
 	}
 	
 	public AtendimentoModel(ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
-			StatusAtendimento situacao, Date dataFinalPago, Double valTotal) {
+			StatusAtendimento situacao, Double valTotalProdutos, Double valTotalServicos) {
+		this.cliente = cliente;
+		this.valDesconto = valDesconto;
+		this.dataAtendimento = dataAtendimento;
+		this.dataTransacao = dataTransacao;
+		this.situacao = situacao;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
+	}
+	
+	public AtendimentoModel(ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
+			StatusAtendimento situacao, Date dataFinalPago, Double valTotalProdutos, Double valTotalServicos) {
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
 		this.dataTransacao = dataTransacao;
 		this.situacao = situacao;
 		this.dataFinalPago = dataFinalPago;
-		this.valTotal = valTotal;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
 	}
 	
 	@Id
@@ -120,20 +146,29 @@ public class AtendimentoModel implements Serializable{
 	public void setDataFinalPago(Date dataFinalPago) {
 		this.dataFinalPago = dataFinalPago;
 	}
-	
-	@Column(name = "val_total")
-	public Double getValTotal() {
-		return valTotal;
+	@Column(name = "total_produtos")
+	public Double getValTotalProdutos() {
+		return valTotalProdutos;
 	}
-	public void setValTotal(Double valTotal) {
-		this.valTotal = valTotal;
+
+	public void setValTotalProdutos(Double valTotalProdutos) {
+		this.valTotalProdutos = valTotalProdutos;
 	}
-	
+	@Column(name = "total_servicos")
+	public Double getValTotalServicos() {
+		return valTotalServicos;
+	}
+
+	public void setValTotalServicos(Double valTotalServicos) {
+		this.valTotalServicos = valTotalServicos;
+	}
+
 	@Override
 	public String toString() {
 		return "AtendimentoModel [id=" + id + ", cliente=" + cliente + ", valDesconto=" + valDesconto
 				+ ", dataAtendimento=" + dataAtendimento + ", dataTransacao=" + dataTransacao + ", situacao=" + situacao
-				+ ", dataFinalPago=" + dataFinalPago + ", valTotal=" + valTotal + "]";
+				+ ", dataFinalPago=" + dataFinalPago + ", valTotalProdutos=" + valTotalProdutos + ", valTotalServicos="
+				+ valTotalServicos + "]";
 	}
-	
+
 }

@@ -16,38 +16,48 @@ public class AtendimentoDTO {
 	private String dataAtendimento;
 	private Integer situacao;
 	private String dataFinalPago;
-	private Double valTotal;
+	private Double valTotalProdutos;
+	private Double valTotalServicos;
 	private List<ServicosAtendimentoDTO> servicosAtendimentoDTO;
 	private List<ProdutosAtendimentoDTO> produtosAtendimentoDTO;
 	
-	
+	public AtendimentoDTO() {
+
+	}
+
 	public AtendimentoDTO(Long id, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
-			@NotEmpty String dataAtendimento,
-			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
+			String dataAtendimento, Integer situacao, Double valTotalProdutos, Double valTotalServicos,
+			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, 
+			List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		this.id = id;
 		this.clienteId = clienteId;
 		this.tipoPagamentoId = tipoPagamentoId;
 		this.formaPagamentoId = formaPagamentoId;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
+		this.situacao = situacao;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
 		this.servicosAtendimentoDTO = servicosAtendimentoDTO;
 		this.produtosAtendimentoDTO = produtosAtendimentoDTO;
+		
 	}
 	
 	public AtendimentoDTO(Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
-			@NotEmpty String dataAtendimento,
+			@NotEmpty String dataAtendimento, Integer situacao,
 			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		this.clienteId = clienteId;
 		this.tipoPagamentoId = tipoPagamentoId;
 		this.formaPagamentoId = formaPagamentoId;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
+		this.situacao = situacao;
 		this.servicosAtendimentoDTO = servicosAtendimentoDTO;
 		this.produtosAtendimentoDTO = produtosAtendimentoDTO;
 	}
 	
 	public AtendimentoDTO(Long id, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
-			@NotEmpty String dataAtendimento, Integer situacao, String dataFinalPago, Double valTotal,
+			@NotEmpty String dataAtendimento, Integer situacao, String dataFinalPago, Double valTotalProdutos, Double valTotalServicos,
 			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		this.id = id;
 		this.clienteId = clienteId;
@@ -57,7 +67,8 @@ public class AtendimentoDTO {
 		this.dataAtendimento = dataAtendimento;
 		this.situacao = situacao;
 		this.dataFinalPago = dataFinalPago;
-		this.valTotal = valTotal;
+		this.valTotalProdutos = valTotalProdutos;
+		this.valTotalServicos = valTotalServicos;
 		this.servicosAtendimentoDTO = servicosAtendimentoDTO;
 		this.produtosAtendimentoDTO = produtosAtendimentoDTO;
 	}
@@ -98,12 +109,23 @@ public class AtendimentoDTO {
 	public void setDataFinalPago(String dataFinalPago) {
 		this.dataFinalPago = dataFinalPago;
 	}
-	public Double getValTotal() {
-		return valTotal;
+	
+	public Double getValTotalProdutos() {
+		return valTotalProdutos;
 	}
-	public void setValTotal(Double valTotal) {
-		this.valTotal = valTotal;
+
+	public void setValTotalProdutos(Double valTotalProdutos) {
+		this.valTotalProdutos = valTotalProdutos;
 	}
+
+	public Double getValTotalServicos() {
+		return valTotalServicos;
+	}
+
+	public void setValTotalServicos(Double valTotalServicos) {
+		this.valTotalServicos = valTotalServicos;
+	}
+
 	public List<ServicosAtendimentoDTO> getServicosAtendimentoDTO() {
 		return servicosAtendimentoDTO;
 	}
@@ -132,4 +154,6 @@ public class AtendimentoDTO {
 	public void setFormaPagamentoId(Long formaPagamentoId) {
 		this.formaPagamentoId = formaPagamentoId;
 	}
+	
+	
 }

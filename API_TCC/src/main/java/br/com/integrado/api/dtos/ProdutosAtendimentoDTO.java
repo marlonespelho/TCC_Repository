@@ -6,19 +6,23 @@ public class ProdutosAtendimentoDTO {
 	private Long produtoId;
 	private Integer quantidade;
 	private Double valUnitario;
-	
-	
-	public ProdutosAtendimentoDTO(Long produtoId, Integer quantidade, Double valUnitario) {
+	private Long atendimentoId;
+		
+	public ProdutosAtendimentoDTO(Long produtoId, Integer quantidade) {
 		this.produtoId = produtoId;
 		this.quantidade = quantidade;
-		this.valUnitario = valUnitario;
+
 	}
 	
-	public ProdutosAtendimentoDTO(Long id, Long produtoId, Integer quantidade, Double valUnitario) {
+	public ProdutosAtendimentoDTO() {
+	}
+
+	public ProdutosAtendimentoDTO(Long id, Long produtoId, Integer quantidade, Double valUnitario, Long atendimentoId) {
 		this.id = id;
 		this.produtoId = produtoId;
 		this.quantidade = quantidade;
 		this.valUnitario = valUnitario;
+		this.atendimentoId = atendimentoId;
 	}
 	
 	public Long getId() {
@@ -44,6 +48,14 @@ public class ProdutosAtendimentoDTO {
 	}
 	public void setValUnitario(Double valUnitario) {
 		this.valUnitario = valUnitario;
+	}
+
+	public Long getAtendimentoId() {
+		return atendimentoId;
+	}
+
+	public void setAtendimentoId(Long atendimentoId) {
+		this.atendimentoId = atendimentoId;
 	}
 	
 }

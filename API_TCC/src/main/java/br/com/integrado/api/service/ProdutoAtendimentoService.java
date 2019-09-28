@@ -46,4 +46,8 @@ public class ProdutoAtendimentoService {
 		return this.produtoAtendimentoRepository.findByAtendimentoId(pageRequest, id);
 	}
 	
+	public List<ProdutoAtendimentoModel> buscarPorAtendimentoId(Long id){
+		return this.produtoAtendimentoRepository.findByAtendimentoId(id);
+	}
+	
 }

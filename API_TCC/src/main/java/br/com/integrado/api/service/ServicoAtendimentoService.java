@@ -44,5 +44,9 @@ public class ServicoAtendimentoService {
 	public Page<ServicoAtendimentoModel> buscarPorAtendimentoId(PageRequest pageRequest,Long id){
 		return this.servicoAtendimentoRepository.findByAtendimentoId(pageRequest, id);
 	}
+	
+	public List<ServicoAtendimentoModel> buscarPorAtendimentoId(Long id){
+		return this.servicoAtendimentoRepository.findByAtendimentoId(id);
+	}
 
 }

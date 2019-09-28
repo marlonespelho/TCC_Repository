@@ -28,24 +28,21 @@ public class ServicoAtendimentoModel implements Serializable{
 	private ServicoModel servico;
 	private Integer quantidade;
 	private Double val_servico;
-	private BrindeGanhoModel brindeGranho;
 	private AtendimentoModel atendimento;
 	
 	public ServicoAtendimentoModel(Long id, ServicoModel servico, Integer quantidade, Double val_servico,
-			BrindeGanhoModel brindeGranho, AtendimentoModel atendimento) {
+			AtendimentoModel atendimento) {
 		this.id = id;
 		this.servico = servico;
 		this.quantidade = quantidade;
 		this.val_servico = val_servico;
-		this.brindeGranho = brindeGranho;
 		this.atendimento = atendimento;
 	}
-	public ServicoAtendimentoModel(ServicoModel servico, Integer quantidade, Double val_servico, BrindeGanhoModel brindeGranho, 
+	public ServicoAtendimentoModel(ServicoModel servico, Integer quantidade, Double val_servico, 
 			AtendimentoModel atendimento) {
 		this.servico = servico;
 		this.quantidade = quantidade;
 		this.val_servico = val_servico;
-		this.brindeGranho = brindeGranho;
 		this.atendimento = atendimento;
 	}
 	
@@ -87,15 +84,6 @@ public class ServicoAtendimentoModel implements Serializable{
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "id_brinde_ganho", nullable = true)
-	public BrindeGanhoModel getBrindeGranho() {
-		return brindeGranho;
-	}
-	public void setBrindeGranho(BrindeGanhoModel brindeGranho) {
-		this.brindeGranho = brindeGranho;
-	}
-	
-	@ManyToOne
 	@JoinColumn(name = "id_atendimento", nullable = false)
 	public AtendimentoModel getAtendimento() {
 		return atendimento;
@@ -106,7 +94,7 @@ public class ServicoAtendimentoModel implements Serializable{
 	@Override
 	public String toString() {
 		return "ServicoAtendimentoModel [id=" + id + ", servico=" + servico + ", quantidade=" + quantidade
-				+ ", val_servico=" + val_servico + ", brindeGranho=" + brindeGranho + ", atendimento=" + atendimento
+				+ ", val_servico=" + val_servico + ",  atendimento=" + atendimento
 				+ "]";
 	}
 	

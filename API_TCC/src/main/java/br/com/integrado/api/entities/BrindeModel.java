@@ -37,6 +37,12 @@ public class BrindeModel implements Serializable{
 		this.brindeConfig = brindeConfig;
 	}
 
+	public BrindeModel(ClienteModel cliente, ServicoModel servico, Integer contadorBrinde, BrindeConfigModel brindeConfig) {
+		this.cliente = cliente;
+		this.servico = servico;
+		this.contadorBrinde = contadorBrinde;
+		this.brindeConfig = brindeConfig;
+	}
 	
 	public BrindeModel(Long id, ClienteModel cliente, ServicoModel servico, Integer contadorBrinde,
 			Date dataBrindeAniversario, BrindeConfigModel brindeConfig) {

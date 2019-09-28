@@ -36,7 +36,7 @@ public class FormaPagamentoController {
 	@Value("${paginacao.qtd_por_pagina}")
 	private int qtdPorPagina;
 	
-	@PostMapping(value = "/cadastrar")
+	@PostMapping()
 	public ResponseEntity<Response<FormaPagamentoDTO>> cadastrar(@Valid @RequestBody FormaPagamentoDTO fmPagamentoDto,
 			BindingResult result) throws NoSuchAlgorithmException{
 		Response<FormaPagamentoDTO> response = new Response<FormaPagamentoDTO>();

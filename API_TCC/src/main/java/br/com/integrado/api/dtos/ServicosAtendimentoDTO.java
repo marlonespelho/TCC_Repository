@@ -6,39 +6,38 @@ public class ServicosAtendimentoDTO {
 	private Long servicoId;
 	private Integer quantidade;
 	private Double val_servico;
-	private Long brindeGranho;
+	private Boolean brindeAniversario;
+	private Long brindeConfig;
 	private Long atendimentoId;
 	
-	public ServicosAtendimentoDTO(Long servicoId, Integer quantidade) {
+	public ServicosAtendimentoDTO(Long servicoId, Integer quantidade, Boolean brindeAniversario, Long brindeConfig) {
 		this.servicoId = servicoId;
 		this.quantidade = quantidade;
+		this.brindeAniversario = brindeAniversario;
+		this.brindeConfig = brindeConfig;
 	}
 	
-	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade) {
+	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Long atendimentoId) {
 		this.id = id;
 		this.servicoId = servicoId;
 		this.quantidade = quantidade;
-	}
-	
-	public ServicosAtendimentoDTO(Long servicoId, Integer quantidade, Double val_servico, Long brindeGranho,
-			Long atendimentoId) {
-		this.servicoId = servicoId;
-		this.quantidade = quantidade;
-		this.val_servico = val_servico;
-		this.brindeGranho = brindeGranho;
 		this.atendimentoId = atendimentoId;
 	}
 	
-	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Double val_servico, Long brindeGranho,
-			Long atendimentoId) {
+	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Double val_servico,
+			Boolean brindeAniversario, Long brindeConfig, Long atendimentoId) {
 		this.id = id;
 		this.servicoId = servicoId;
 		this.quantidade = quantidade;
 		this.val_servico = val_servico;
-		this.brindeGranho = brindeGranho;
+		this.brindeAniversario = brindeAniversario;
+		this.brindeConfig = brindeConfig;
 		this.atendimentoId = atendimentoId;
 	}
-	
+
+	public ServicosAtendimentoDTO() {
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -63,17 +62,28 @@ public class ServicosAtendimentoDTO {
 	public void setVal_servico(Double val_servico) {
 		this.val_servico = val_servico;
 	}
-	public Long getBrindeGranho() {
-		return brindeGranho;
-	}
-	public void setBrindeGranho(Long brindeGranho) {
-		this.brindeGranho = brindeGranho;
-	}
 	public Long getAtendimentoId() {
 		return atendimentoId;
 	}
 	public void setAtendimentoId(Long atendimentoId) {
 		this.atendimentoId = atendimentoId;
 	}
-		
+
+	public Boolean getBrindeAniversario() {
+		return brindeAniversario;
+	}
+
+	public void setBrindeAniversario(Boolean brindeAniversario) {
+		this.brindeAniversario = brindeAniversario;
+	}
+
+	public Long getBrindeConfig() {
+		return brindeConfig;
+	}
+
+	public void setBrindeConfig(Long brindeConfig) {
+		this.brindeConfig = brindeConfig;
+	}	
+	
+	
 }
