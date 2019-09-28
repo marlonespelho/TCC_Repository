@@ -17,11 +17,12 @@ public class ServicosAtendimentoDTO {
 		this.brindeConfig = brindeConfig;
 	}
 	
-	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Long atendimentoId) {
+	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Long atendimentoId, Double val_servico) {
 		this.id = id;
 		this.servicoId = servicoId;
 		this.quantidade = quantidade;
 		this.atendimentoId = atendimentoId;
+		this.val_servico = val_servico;
 	}
 	
 	public ServicosAtendimentoDTO(Long id, Long servicoId, Integer quantidade, Double val_servico,

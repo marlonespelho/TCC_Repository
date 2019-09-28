@@ -43,8 +43,8 @@ public class ProdutoService {
 		return this.produtoRepository.findByMarcaDescricaoContainingIgnoreCase(pageRequest, descricao);
 	}
 	
-	public Page<ProdutoModel> buscarPorCodigo(PageRequest pageRequest, String codigo){
-		return this.produtoRepository.findByCodBarrasContainingIgnoreCase(pageRequest, codigo);
+	public Optional<ProdutoModel> buscarPorCodigo(String codigo){
+		return this.produtoRepository.findByCodBarrasContainingIgnoreCase(codigo);
 	}
 	
 	public Optional<ProdutoModel> buscarPorDescricaoEMarca(String descricao,Long idMarca){

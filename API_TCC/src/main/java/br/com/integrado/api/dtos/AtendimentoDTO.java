@@ -20,16 +20,18 @@ public class AtendimentoDTO {
 	private Double valTotalServicos;
 	private List<ServicosAtendimentoDTO> servicosAtendimentoDTO;
 	private List<ProdutosAtendimentoDTO> produtosAtendimentoDTO;
+	private Long funcionarioId;
 	
 	public AtendimentoDTO() {
 
 	}
 
-	public AtendimentoDTO(Long id, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
+	public AtendimentoDTO(Long id, Long funcionarioId, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
 			String dataAtendimento, Integer situacao, Double valTotalProdutos, Double valTotalServicos,
 			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, 
 			List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		this.id = id;
+		this.funcionarioId = funcionarioId;
 		this.clienteId = clienteId;
 		this.tipoPagamentoId = tipoPagamentoId;
 		this.formaPagamentoId = formaPagamentoId;
@@ -43,9 +45,10 @@ public class AtendimentoDTO {
 		
 	}
 	
-	public AtendimentoDTO(Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
+	public AtendimentoDTO(Long funcionarioId, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
 			@NotEmpty String dataAtendimento, Integer situacao,
 			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
+		this.funcionarioId = funcionarioId;
 		this.clienteId = clienteId;
 		this.tipoPagamentoId = tipoPagamentoId;
 		this.formaPagamentoId = formaPagamentoId;
@@ -56,10 +59,11 @@ public class AtendimentoDTO {
 		this.produtosAtendimentoDTO = produtosAtendimentoDTO;
 	}
 	
-	public AtendimentoDTO(Long id, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
+	public AtendimentoDTO(Long id, Long funcionarioId, Long clienteId, Long tipoPagamentoId, Long formaPagamentoId, Double valDesconto,
 			@NotEmpty String dataAtendimento, Integer situacao, String dataFinalPago, Double valTotalProdutos, Double valTotalServicos,
 			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		this.id = id;
+		this.funcionarioId = funcionarioId;
 		this.clienteId = clienteId;
 		this.tipoPagamentoId = tipoPagamentoId;
 		this.formaPagamentoId = formaPagamentoId;
@@ -154,6 +158,13 @@ public class AtendimentoDTO {
 	public void setFormaPagamentoId(Long formaPagamentoId) {
 		this.formaPagamentoId = formaPagamentoId;
 	}
-	
+
+	public Long getFuncionarioId() {
+		return funcionarioId;
+	}
+
+	public void setFuncionarioId(Long funcionarioId) {
+		this.funcionarioId = funcionarioId;
+	}
 	
 }

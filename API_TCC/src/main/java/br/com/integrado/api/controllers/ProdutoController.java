@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.integrado.api.dtos.AtendimentoDTO;
 import br.com.integrado.api.dtos.ProdutoDTO;
 import br.com.integrado.api.entities.ProdutoModel;
 import br.com.integrado.api.responses.Response;
@@ -153,16 +154,15 @@ public class ProdutoController {
 	}
 	
 	@GetMapping(value = "/codbarras/{codigo}")
-	public ResponseEntity<Response<Page<ProdutoDTO>>> buscarPorCodigoBarras(
-			@PathVariable("codigo") String codigo,
-			@RequestParam(value = "pag", defaultValue = "0") int pag,
-			@RequestParam(value = "ord", defaultValue = "id") String ord,
-			@RequestParam(value = "dir", defaultValue = "DESC") String dir){
-		Response<Page<ProdutoDTO>> response = new Response<Page<ProdutoDTO>>();
-		PageRequest pageRequest = new PageRequest(pag, this.qtdPorPagina, Direction.valueOf(dir), ord);
-		Page<ProdutoModel> produtos = this.produtoService.buscarPorCodigo(pageRequest, codigo);
-		Page<ProdutoDTO> produtosDto = produtos.map(produto -> this.converterProdutoParaDto(produto));
-		response.setData(produtosDto);
+	public ResponseEntity<Response<ProdutoDTO>> buscarPorCodigoBarras(
+			@PathVariable("codigo") String codigo){
+		Response<ProdutoDTO> response = new Response<ProdutoDTO>();
+		Optional<ProdutoModel> produto = this.produtoService.buscarPorCodigo(codigo);
+		if (!produto.isPresent()) {
+			response.getErrors().add("Produto não encontrado");
+			return ResponseEntity.badRequest().body(response);
+		}
+		response.setData(this.converterProdutoParaDto(produto.get()));
 		return ResponseEntity.ok(response);
 	}
 	
@@ -189,6 +189,15 @@ public class ProdutoController {
 		Optional<ProdutoModel> produto = this.produtoService.buscarPorDescricaoEMarca(produtoDto.getDescricao(), produtoDto.getIdMarca());
 		if (produto.isPresent() && produto.get().getId() != produtoDto.getId()) {
 			result.addError(new ObjectError("Produto", "Já existe um produto com a mesma descrição e marca informada"));
+		}
+		if (this.produtoService.buscarPorCodigo(produtoDto.getCodBarras()).isPresent()) {
+			result.addError(new ObjectError("Produto", "O código de barras deve ser único"));
+		}
+		if (produtoDto.getId() != null) {
+			produto = this.produtoService.buscarPorCodigo(produtoDto.getCodBarras());
+			if (produto.isPresent() && produto.get().getId() != produtoDto.getId() && produto.get().getCodBarras().equalsIgnoreCase(produtoDto.getCodBarras())) {
+				
+			}
 		}
 	}
 	

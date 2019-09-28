@@ -31,6 +31,6 @@ public interface ProdutoRepository extends JpaRepository<ProdutoModel, Long> {
 
 	Page<ProdutoModel> findByInAtivo(Pageable pageable, Boolean inAtivo);
 
-	Page<ProdutoModel> findByCodBarrasContainingIgnoreCase(Pageable pageable, String codigo);
+	Optional<ProdutoModel> findByCodBarrasContainingIgnoreCase(String codigo);
 	
 }

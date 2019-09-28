@@ -25,6 +25,7 @@ import br.com.integrado.api.dtos.ServicosAtendimentoDTO;
 import br.com.integrado.api.entities.AtendimentoModel;
 import br.com.integrado.api.entities.BrindeModel;
 import br.com.integrado.api.entities.ClienteModel;
+import br.com.integrado.api.entities.FuncionarioModel;
 import br.com.integrado.api.entities.ProdutoAtendimentoModel;
 import br.com.integrado.api.entities.ProdutoModel;
 import br.com.integrado.api.entities.ServicoAtendimentoModel;
@@ -36,6 +37,7 @@ import br.com.integrado.api.service.BrindeConfigService;
 import br.com.integrado.api.service.BrindeService;
 import br.com.integrado.api.service.ClienteService;
 import br.com.integrado.api.service.FormaPagamentoService;
+import br.com.integrado.api.service.FuncionarioService;
 import br.com.integrado.api.service.ProdutoAtendimentoService;
 import br.com.integrado.api.service.ProdutoService;
 import br.com.integrado.api.service.ServicoAtendimentoService;
@@ -70,6 +72,8 @@ public class AtendimentoController {
 	private BrindeService brindeService;
 	@Autowired
 	private BrindeConfigService brindeConfigService;
+	@Autowired
+	private FuncionarioService funcionarioService;
 	private DataUtils dataUtils = new DataUtils();
 	
 	@PostMapping
@@ -92,7 +96,8 @@ public class AtendimentoController {
 	}
 
 	private AtendimentoDTO converterAtendimentoEmDTO(AtendimentoModel atendimento, AtendimentoDTO atendimentoDto) {
-		return new AtendimentoDTO(atendimento.getId(), atendimento.getCliente().getId(), atendimentoDto.getTipoPagamentoId(), 
+		return new AtendimentoDTO(atendimento.getId(), atendimento.getFuncionario().getId(),
+				atendimento.getCliente().getId(), atendimentoDto.getTipoPagamentoId(), 
 				atendimentoDto.getFormaPagamentoId(), atendimento.getValDesconto(), this.dataUtils.DataParaStringSpring(atendimento.getDataAtendimento()),
 				atendimento.getSituacao().getStatus(), atendimento.getValTotalProdutos(), atendimento.getValTotalServicos(),
 				this.converterServicosAtendimentoEmDto(atendimento.getId()), this.converterProdutosAtendimentoEmDto((atendimento.getId())));
@@ -109,9 +114,9 @@ public class AtendimentoController {
 
 	private List<ServicosAtendimentoDTO> converterServicosAtendimentoEmDto(Long id) {
 		List<ServicosAtendimentoDTO> servicosAtendimentoDto = new ArrayList<ServicosAtendimentoDTO>();
-		for (ServicoAtendimentoModel servicosAtendimento : this.servicoAtendimentoService.buscarPorAtendimentoId(id)) {
-			servicosAtendimentoDto.add(new ServicosAtendimentoDTO(servicosAtendimento.getId(), servicosAtendimento.getServico().getId(), 
-					servicosAtendimento.getQuantidade(), id));
+		for (ServicoAtendimentoModel servicoAtendimento : this.servicoAtendimentoService.buscarPorAtendimentoId(id)) {
+			servicosAtendimentoDto.add(new ServicosAtendimentoDTO(servicoAtendimento.getId(), servicoAtendimento.getServico().getId(), 
+					servicoAtendimento.getQuantidade(), id, servicoAtendimento.getVal_servico()));
 		}
 		return servicosAtendimentoDto;
 	}
@@ -151,28 +156,31 @@ public class AtendimentoController {
 	}
 
 	private void validarProdutos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
-		for (ProdutosAtendimentoDTO produtoAtendimentoDto : atendimentoDto.getProdutosAtendimentoDTO()) {
-			Optional<ProdutoModel> produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId());
-			if (!produto.isPresent()) {
-				result.addError(new ObjectError("Produto", "Produto do id " + produtoAtendimentoDto.getProdutoId() +" não encontrado"));
-			}
-			if (this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get().getQuantidade() < produtoAtendimentoDto.getQuantidade()) {
-				result.addError(new ObjectError("Produto", produto.get().getDescricao() +" sem quantidade suficiente em estoque"));
+		if (!atendimentoDto.getProdutosAtendimentoDTO().isEmpty()) {
+			for (ProdutosAtendimentoDTO produtoAtendimentoDto : atendimentoDto.getProdutosAtendimentoDTO()) {
+				Optional<ProdutoModel> produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId());
+				if (!produto.isPresent()) {
+					result.addError(new ObjectError("Produto", "Produto do id " + produtoAtendimentoDto.getProdutoId() +" não encontrado"));
+				}
+				if (this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get().getQuantidade() < produtoAtendimentoDto.getQuantidade()) {
+					result.addError(new ObjectError("Produto", produto.get().getDescricao() +" sem quantidade suficiente em estoque"));
+				}
 			}
 		}
 	}
 
 	private AtendimentoModel converterDTOEmAtendimento(AtendimentoDTO atendimentoDto) {
 		ClienteModel cliente = this.clienteService.buscarPorID(atendimentoDto.getClienteId()).get();
+		FuncionarioModel funcionario = this.funcionarioService.buscarPorId(atendimentoDto.getFuncionarioId()).get();
 		Double valTotalProdutos = this.calcularValorTotalProdutos(atendimentoDto.getProdutosAtendimentoDTO());
 		Double valTotalServicos = this.calcularValorTotalServicos(atendimentoDto.getServicosAtendimentoDTO(), cliente.getId());
 		Double valDesconto = (valTotalProdutos + valTotalServicos) * (atendimentoDto.getValDesconto() / 100);	
 		if (atendimentoDto.getId() != null) {
-			return new AtendimentoModel(atendimentoDto.getId(), cliente, 
+			return new AtendimentoModel(atendimentoDto.getId(), funcionario, cliente, 
 					valDesconto, dataUtils.StringParaDataSpring(atendimentoDto.getDataAtendimento()), new Date(), 
 					StatusAtendimento.ObterStatusPorId(atendimentoDto.getSituacao()), valTotalProdutos, valTotalServicos);
 		}
-		return new AtendimentoModel(cliente, valDesconto, 
+		return new AtendimentoModel(funcionario, cliente, valDesconto, 
 					dataUtils.StringParaDataSpring(atendimentoDto.getDataAtendimento()), new Date(), 
 					StatusAtendimento.ObterStatusPorId(atendimentoDto.getSituacao()), valTotalProdutos, valTotalServicos);
 	}
@@ -209,27 +217,32 @@ public class AtendimentoController {
 	}
 
 	private void validarServicos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
-		int contBrindAniversario = 0;
-		for (ServicosAtendimentoDTO servicoAtendimentoDto : atendimentoDto.getServicosAtendimentoDTO()) {
-			if (!this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).isPresent()) {
-				result.addError(new ObjectError("Servico", "Servico do id " + servicoAtendimentoDto.getServicoId() +" não encontrado"));
-			}	
-			if (!this.brindeService.buscarPorClienteEServico(atendimentoDto.getClienteId(), servicoAtendimentoDto.getServicoId()).isPresent()) {
-				this.brindeService.salvar(new BrindeModel(this.clienteService.buscarPorID(atendimentoDto.getClienteId()).get(),
-						this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get(), 0,
-						this.brindeConfigService.buscarPorId(servicoAtendimentoDto.getBrindeConfig()).get()));
-			}
-			if (servicoAtendimentoDto.getBrindeAniversario()) {
-				contBrindAniversario++;
-				this.validarBrindeAniversario(atendimentoDto, result);
-			}
-			if (contBrindAniversario > 1) {
-				result.addError(new ObjectError("Brinde Aniversário", "Somente um brinde de aniversário por atendimento"));
+		if (!atendimentoDto.getServicosAtendimentoDTO().isEmpty()) {
+			int contBrindAniversario = 0;
+			for (ServicosAtendimentoDTO servicoAtendimentoDto : atendimentoDto.getServicosAtendimentoDTO()) {
+				if (!this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).isPresent()) {
+					result.addError(new ObjectError("Servico", "Servico do id " + servicoAtendimentoDto.getServicoId() +" não encontrado"));
+				}	
+				if (!this.brindeService.buscarPorClienteEServico(atendimentoDto.getClienteId(), servicoAtendimentoDto.getServicoId()).isPresent()) {
+					this.brindeService.salvar(new BrindeModel(this.clienteService.buscarPorID(atendimentoDto.getClienteId()).get(),
+							this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get(), 0,
+							this.brindeConfigService.buscarPorId(servicoAtendimentoDto.getBrindeConfig()).get()));
+				}
+				if (servicoAtendimentoDto.getBrindeAniversario()) {
+					contBrindAniversario++;
+					this.validarBrindeAniversario(atendimentoDto, result);
+				}
+				if (contBrindAniversario > 1) {
+					result.addError(new ObjectError("Brinde Aniversário", "Somente um brinde de aniversário por atendimento"));
+				}
 			}
 		}
 	}
 
 	private void validarCabecalho(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
+		if (!this.funcionarioService.buscarPorId(atendimentoDto.getFuncionarioId()).isPresent()) {
+			result.addError(new ObjectError("Funcionario", "Funcionário não informado ou não encontrado"));
+		}
 		if (!this.tipoPagamentoService.buscarPorId(atendimentoDto.getTipoPagamentoId()).isPresent()){
 			result.addError(new ObjectError("Tipo Pagamento", "Tipo de pagamento não informado ou não encontrado"));
 		}

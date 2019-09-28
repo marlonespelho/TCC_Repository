@@ -24,6 +24,7 @@ public class AtendimentoModel implements Serializable{
 	private static final long serialVersionUID = -1699431020145007374L;
 
 	private Long id;
+	private FuncionarioModel funcionario;
 	private ClienteModel cliente;
 	private Double valDesconto;
 	private Date dataAtendimento;
@@ -37,9 +38,10 @@ public class AtendimentoModel implements Serializable{
 	public AtendimentoModel() {
 	}
 	
-	public AtendimentoModel(Long id, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
+	public AtendimentoModel(Long id, FuncionarioModel funcionario, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
 			StatusAtendimento situacao, Date dataFinalPago, Double valTotalProdutos, Double valTotalServicos) {
 		this.id = id;
+		this.funcionario = funcionario;
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
@@ -50,9 +52,10 @@ public class AtendimentoModel implements Serializable{
 		this.valTotalServicos = valTotalServicos;
 	}
 	
-	public AtendimentoModel(Long id, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
+	public AtendimentoModel(Long id, FuncionarioModel funcionario, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
 			StatusAtendimento situacao, Double valTotalProdutos, Double valTotalServicos) {
 		this.id = id;
+		this.funcionario = funcionario;
 		this.cliente = cliente;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
@@ -62,9 +65,10 @@ public class AtendimentoModel implements Serializable{
 		this.valTotalServicos = valTotalServicos;
 	}
 	
-	public AtendimentoModel(ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
+	public AtendimentoModel(FuncionarioModel funcionario, ClienteModel cliente, Double valDesconto, Date dataAtendimento, Date dataTransacao,
 			StatusAtendimento situacao, Double valTotalProdutos, Double valTotalServicos) {
 		this.cliente = cliente;
+		this.funcionario = funcionario;
 		this.valDesconto = valDesconto;
 		this.dataAtendimento = dataAtendimento;
 		this.dataTransacao = dataTransacao;
@@ -161,6 +165,16 @@ public class AtendimentoModel implements Serializable{
 
 	public void setValTotalServicos(Double valTotalServicos) {
 		this.valTotalServicos = valTotalServicos;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "funcionario_id")
+	public FuncionarioModel getFuncionario() {
+		return funcionario;
+	}
+
+	public void setFuncionario(FuncionarioModel funcionario) {
+		this.funcionario = funcionario;
 	}
 
 	@Override
