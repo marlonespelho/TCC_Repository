@@ -153,10 +153,17 @@ public class AtendimentoController {
 	}
 
 	private void movimentarBrindes(List<ServicoAtendimentoModel> servicos, @Valid AtendimentoDTO atendimentoDto) {
-		for (ServicoAtendimentoModel servicoAtendimentoModel : servicos) {
-			if
-		}
-		
+			for (ServicosAtendimentoDTO servicoAtendimentoDto: atendimentoDto.getServicosAtendimentoDTO()) {
+				if (servicoAtendimentoDto.getBrindeAniversario()) {
+					ServicoAtendimentoModel servico = new ServicoAtendimentoModel();
+					for (ServicoAtendimentoModel servicoAtendimento : servicos) {
+						if (servicoAtendimento.getServico().getId() == servicoAtendimentoDto.getServicoId()) {
+							servico = servicoAtendimento;
+						}
+					}
+					this.brindeService.disponibilizarBrindeAniversario(servico);
+				}
+			}
 	}
 
 	private List<AgendamentoModel> converterDtoEmAgendamentos(@Valid AtendimentoDTO atendimentoDto,
