@@ -15,13 +15,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.integrado.api.dtos.AgendamentoDTO;
 import br.com.integrado.api.dtos.AtendimentoDTO;
 import br.com.integrado.api.dtos.ProdutosAtendimentoDTO;
 import br.com.integrado.api.dtos.ServicosAtendimentoDTO;
+import br.com.integrado.api.entities.AgendamentoModel;
 import br.com.integrado.api.entities.AtendimentoModel;
 import br.com.integrado.api.entities.BrindeModel;
 import br.com.integrado.api.entities.ClienteModel;
@@ -30,14 +33,17 @@ import br.com.integrado.api.entities.ProdutoAtendimentoModel;
 import br.com.integrado.api.entities.ProdutoModel;
 import br.com.integrado.api.entities.ServicoAtendimentoModel;
 import br.com.integrado.api.entities.ServicoModel;
+import br.com.integrado.api.enums.StatusAgendamento;
 import br.com.integrado.api.enums.StatusAtendimento;
 import br.com.integrado.api.responses.Response;
+import br.com.integrado.api.service.AgendamentosService;
 import br.com.integrado.api.service.AtendimentoService;
 import br.com.integrado.api.service.BrindeConfigService;
 import br.com.integrado.api.service.BrindeService;
 import br.com.integrado.api.service.ClienteService;
 import br.com.integrado.api.service.FormaPagamentoService;
 import br.com.integrado.api.service.FuncionarioService;
+import br.com.integrado.api.service.MovEstoqueService;
 import br.com.integrado.api.service.ProdutoAtendimentoService;
 import br.com.integrado.api.service.ProdutoService;
 import br.com.integrado.api.service.ServicoAtendimentoService;
@@ -74,6 +80,10 @@ public class AtendimentoController {
 	private BrindeConfigService brindeConfigService;
 	@Autowired
 	private FuncionarioService funcionarioService;
+	@Autowired
+	private AgendamentosService agendamentosService;
+	@Autowired
+	private MovEstoqueService estoqueService;
 	private DataUtils dataUtils = new DataUtils();
 	
 	@PostMapping
@@ -83,16 +93,85 @@ public class AtendimentoController {
 		this.validarCabecalho(atendimentoDto, result);
 		this.validarProdutos(atendimentoDto, result);
 		this.validarServicos(atendimentoDto, result);
+		this.validarAgendamentos(atendimentoDto, result);
 		if (result.hasErrors()) {
 			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		AtendimentoModel atendimento = this.converterDTOEmAtendimento(atendimentoDto);
 		this.atendimentoService.salvar(atendimento);
-		this.produtoAtendimentoService.salvar(this.converterDtoEmProdutoAtendimento(atendimentoDto.getProdutosAtendimentoDTO(), atendimento));
-		this.servicoAtendimentoService.salvar(this.converterDtoEmServicoAtendimento(atendimentoDto.getServicosAtendimentoDTO(), atendimento));
+		this.produtoAtendimentoService.salvar(this.converterDtoEmProdutoAtendimento(atendimentoDto, atendimento));
+		this.servicoAtendimentoService.salvar(this.converterDtoEmServicoAtendimento(atendimentoDto, atendimento));
+		this.agendamentosService.salvar(this.converterDtoEmAgendamentos(atendimentoDto, atendimento));
 		response.setData(this.converterAtendimentoEmDTO(atendimento, atendimentoDto));
 		return ResponseEntity.ok(response);
+	}
+	
+	@PutMapping
+	public ResponseEntity<Response<AtendimentoDTO>> alterar(@Valid @RequestBody AtendimentoDTO atendimentoDto,
+			BindingResult result) throws NoSuchAlgorithmException{
+		Response<AtendimentoDTO> response = new Response<AtendimentoDTO>();
+		this.verificarStatusAtendimento(atendimentoDto, result);
+		this.validarCabecalho(atendimentoDto, result);
+		this.validarProdutos(atendimentoDto, result);
+		this.validarServicos(atendimentoDto, result);
+		this.validarAgendamentos(atendimentoDto, result);
+		if (result.hasErrors()) {
+			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		AtendimentoModel atendimento = this.converterDTOEmAtendimento(atendimentoDto);
+		this.atendimentoService.salvar(atendimento);
+		this.produtoAtendimentoService.salvar(this.converterDtoEmProdutoAtendimento(atendimentoDto, atendimento));
+		this.servicoAtendimentoService.salvar(this.converterDtoEmServicoAtendimento(atendimentoDto, atendimento));
+		this.agendamentosService.salvar(this.converterDtoEmAgendamentos(atendimentoDto, atendimento));
+		response.setData(this.converterAtendimentoEmDTO(atendimento, atendimentoDto));
+		return ResponseEntity.ok(response);
+	}
+	
+	@PutMapping
+	public ResponseEntity<Response<AtendimentoDTO>> consolidar(@Valid @RequestBody AtendimentoDTO atendimentoDto,
+			BindingResult result) throws NoSuchAlgorithmException{
+		Response<AtendimentoDTO> response = new Response<AtendimentoDTO>();
+		this.verificarStatusAtendimento(atendimentoDto, result);
+		this.validarCabecalho(atendimentoDto, result);
+		this.validarProdutos(atendimentoDto, result);
+		this.validarServicos(atendimentoDto, result);
+		this.validarAgendamentos(atendimentoDto, result);
+		if (result.hasErrors()) {
+			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		AtendimentoModel atendimento = this.converterDTOEmAtendimento(atendimentoDto);
+		this.atendimentoService.salvar(atendimento);
+		this.estoqueService.movimentarAtendimento(this.produtoAtendimentoService.salvar(this.converterDtoEmProdutoAtendimento(atendimentoDto, atendimento)));
+		List<ServicoAtendimentoModel> servicos = this.servicoAtendimentoService.salvar(this.converterDtoEmServicoAtendimento(atendimentoDto, atendimento));
+		this.movimentarBrindes(servicos, atendimentoDto);
+		this.agendamentosService.salvar(this.converterDtoEmAgendamentos(atendimentoDto, atendimento));
+		response.setData(this.converterAtendimentoEmDTO(atendimento, atendimentoDto));
+		return ResponseEntity.ok(response);
+	}
+
+	private void movimentarBrindes(List<ServicoAtendimentoModel> servicos, @Valid AtendimentoDTO atendimentoDto) {
+		for (ServicoAtendimentoModel servicoAtendimentoModel : servicos) {
+			if
+		}
+		
+	}
+
+	private List<AgendamentoModel> converterDtoEmAgendamentos(@Valid AtendimentoDTO atendimentoDto,
+			AtendimentoModel atendimento) {
+		if (!atendimentoDto.getAgendamentoDtos().isEmpty()) {
+			List<AgendamentoModel> agendamentos = new ArrayList<AgendamentoModel>();
+			for (AgendamentoDTO agendamentoDto : atendimentoDto.getAgendamentoDtos()) {
+				AgendamentoModel agendamento = this.agendamentosService.buscarPorId(agendamentoDto.getId()).get();
+				agendamento.setAtendimento(atendimento);
+				agendamento.setStatus(StatusAgendamento.ObterStatusPorId(agendamentoDto.getStatus()));
+				agendamentos.add(agendamento);
+			}
+			return agendamentos;
+		}
+		return null;
 	}
 
 	private AtendimentoDTO converterAtendimentoEmDTO(AtendimentoModel atendimento, AtendimentoDTO atendimentoDto) {
@@ -121,52 +200,43 @@ public class AtendimentoController {
 		return servicosAtendimentoDto;
 	}
 
-	private List<ServicoAtendimentoModel> converterDtoEmServicoAtendimento(
-			List<ServicosAtendimentoDTO> servicosAtendimentoDTO, AtendimentoModel atendimento) {
-		List<ServicoAtendimentoModel> servicoAtendimento = new ArrayList<ServicoAtendimentoModel>();
-		for (ServicosAtendimentoDTO servicoAtendimentoDto : servicosAtendimentoDTO) {
-			ServicoModel servico = this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get();
-			if (servicoAtendimentoDto.getId()!= null) {
-				servicoAtendimento.add(new ServicoAtendimentoModel(servicoAtendimentoDto.getId(), 
-						servico, servicoAtendimentoDto.getQuantidade(), servico.getValor(), atendimento));
-			}
-			else{
-				servicoAtendimento.add(new ServicoAtendimentoModel(	servico, servicoAtendimentoDto.getQuantidade(), 
-						servico.getValor(), atendimento));
-			}
+	private List<ServicoAtendimentoModel> converterDtoEmServicoAtendimento(AtendimentoDTO atendimentoDto, AtendimentoModel atendimento) {
+		if (!atendimentoDto.getServicosAtendimentoDTO().isEmpty()) {
+			List<ServicoAtendimentoModel> servicoAtendimento = new ArrayList<ServicoAtendimentoModel>();
+			for (ServicosAtendimentoDTO servicoAtendimentoDto : atendimentoDto.getServicosAtendimentoDTO()) {
+				ServicoModel servico = this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get();
+				if (servicoAtendimentoDto.getId()!= null) {
+					servicoAtendimento.add(new ServicoAtendimentoModel(servicoAtendimentoDto.getId(), 
+							servico, servicoAtendimentoDto.getQuantidade(), servico.getValor(), atendimento));
+				}
+				else{
+					servicoAtendimento.add(new ServicoAtendimentoModel(	servico, servicoAtendimentoDto.getQuantidade(), 
+							servico.getValor(), atendimento));
+				}
 
+			}
+			return servicoAtendimento;
 		}
-		return servicoAtendimento;
+		return null;
 	}
 
-	private List<ProdutoAtendimentoModel> converterDtoEmProdutoAtendimento(List<ProdutosAtendimentoDTO> produtosAtendimentoDTO, AtendimentoModel atendimento) {
-		List<ProdutoAtendimentoModel> produtosAtendimento = new ArrayList<ProdutoAtendimentoModel>();
-		for (ProdutosAtendimentoDTO produtoAtendimentoDto : produtosAtendimentoDTO) {
-			ProdutoModel produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get();
-			if (produtoAtendimentoDto.getId()!= null) {
-				produtosAtendimento.add(new ProdutoAtendimentoModel(produtoAtendimentoDto.getId(), atendimento, produto, 
-														produtoAtendimentoDto.getQuantidade(), produto.getValVendido()));
-			}
-			else {
-				produtosAtendimento.add(new ProdutoAtendimentoModel(atendimento, produto, 
-						produtoAtendimentoDto.getQuantidade(), produto.getValVendido()));
-			}
-		}
-		return produtosAtendimento;
-	}
-
-	private void validarProdutos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
+	private List<ProdutoAtendimentoModel> converterDtoEmProdutoAtendimento(AtendimentoDTO atendimentoDto, AtendimentoModel atendimento) {
 		if (!atendimentoDto.getProdutosAtendimentoDTO().isEmpty()) {
+			List<ProdutoAtendimentoModel> produtosAtendimento = new ArrayList<ProdutoAtendimentoModel>();
 			for (ProdutosAtendimentoDTO produtoAtendimentoDto : atendimentoDto.getProdutosAtendimentoDTO()) {
-				Optional<ProdutoModel> produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId());
-				if (!produto.isPresent()) {
-					result.addError(new ObjectError("Produto", "Produto do id " + produtoAtendimentoDto.getProdutoId() +" não encontrado"));
+				ProdutoModel produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get();
+				if (produtoAtendimentoDto.getId()!= null) {
+					produtosAtendimento.add(new ProdutoAtendimentoModel(produtoAtendimentoDto.getId(), atendimento, produto, 
+															produtoAtendimentoDto.getQuantidade(), produto.getValVendido()));
 				}
-				if (this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get().getQuantidade() < produtoAtendimentoDto.getQuantidade()) {
-					result.addError(new ObjectError("Produto", produto.get().getDescricao() +" sem quantidade suficiente em estoque"));
+				else {
+					produtosAtendimento.add(new ProdutoAtendimentoModel(atendimento, produto, 
+							produtoAtendimentoDto.getQuantidade(), produto.getValVendido()));
 				}
 			}
+			return produtosAtendimento;
 		}
+		return null;
 	}
 
 	private AtendimentoModel converterDTOEmAtendimento(AtendimentoDTO atendimentoDto) {
@@ -199,21 +269,35 @@ public class AtendimentoController {
 		}
 		return total;
 	}
-
-	private boolean verificarBrindeFidelidade(ServicoModel servico, Long clienteId, Integer quantidade) {
-		BrindeModel brinde = this.brindeService.buscarPorClienteEServico(clienteId, servico.getId()).get();
-		if (brinde.getBrindeConfig().getBrindeFidelidade() && (quantidade + brinde.getContadorBrinde())> brinde.getBrindeConfig().getQuantContador()) {
-			return true;
-		}
-		return false;
-	}
-
+	
 	private Double calcularValorTotalProdutos(List<ProdutosAtendimentoDTO> produtosAtendimentoDTO) {
 		Double total = new Double(0);
 		for (ProdutosAtendimentoDTO produtoAtendimentoDTO : produtosAtendimentoDTO) {
 			total += this.produtoService.buscarPorId(produtoAtendimentoDTO.getProdutoId()).get().getValVendido() * produtoAtendimentoDTO.getQuantidade();
 		}
 		return total;
+	}
+
+	private void validarProdutos( AtendimentoDTO atendimentoDto, BindingResult result) {
+		if (!atendimentoDto.getProdutosAtendimentoDTO().isEmpty()) {
+			for (ProdutosAtendimentoDTO produtoAtendimentoDto : atendimentoDto.getProdutosAtendimentoDTO()) {
+				Optional<ProdutoModel> produto = this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId());
+				if (!produto.isPresent()) {
+					result.addError(new ObjectError("Produto", "Produto do id " + produtoAtendimentoDto.getProdutoId() +" não encontrado"));
+				}
+				if (this.produtoService.buscarPorId(produtoAtendimentoDto.getProdutoId()).get().getQuantidade() < produtoAtendimentoDto.getQuantidade()) {
+					result.addError(new ObjectError("Produto", produto.get().getDescricao() +" sem quantidade suficiente em estoque"));
+				}
+			}
+		}
+	}
+	
+	private boolean verificarBrindeFidelidade(ServicoModel servico, Long clienteId, Integer quantidade) {
+		BrindeModel brinde = this.brindeService.buscarPorClienteEServico(clienteId, servico.getId()).get();
+		if (brinde.getBrindeConfig().getBrindeFidelidade() && (quantidade + brinde.getContadorBrinde())> brinde.getBrindeConfig().getQuantContador()) {
+			return true;
+		}
+		return false;
 	}
 
 	private void validarServicos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
@@ -228,12 +312,12 @@ public class AtendimentoController {
 							this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get(), 0,
 							this.brindeConfigService.buscarPorId(servicoAtendimentoDto.getBrindeConfig()).get()));
 				}
-				if (servicoAtendimentoDto.getBrindeAniversario()) {
-					contBrindAniversario++;
-					this.validarBrindeAniversario(atendimentoDto, result);
-				}
 				if (contBrindAniversario > 1) {
 					result.addError(new ObjectError("Brinde Aniversário", "Somente um brinde de aniversário por atendimento"));
+				}
+				else if (servicoAtendimentoDto.getBrindeAniversario()) {
+					contBrindAniversario++;
+					this.validarBrindeAniversario(atendimentoDto, result);
 				}
 			}
 		}
@@ -260,6 +344,30 @@ public class AtendimentoController {
 	private void validarBrindeAniversario(AtendimentoDTO atendimentoDto, BindingResult result) {
 		if (!this.brindeService.verificarBrindeAniversario(atendimentoDto.getClienteId())) {
 			result.addError(new ObjectError("Brinde Aniversário", "Brinde de aniversário não disponível"));
+		}
+	}
+	
+	private void validarAgendamentos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
+		if (atendimentoDto.getAgendamentoDtos().isEmpty()) {
+			for (AgendamentoDTO agendamentoDto : atendimentoDto.getAgendamentoDtos()) {
+				Optional<AgendamentoModel> agendamento = this.agendamentosService.buscarPorId(agendamentoDto.getId());
+				if (!agendamento.isPresent()) {
+					result.addError(new ObjectError("Agendamento", "Agendamento com o id" + agendamentoDto.getId() + " não encontrado"));
+				}
+				else if (agendamento.get().getStatus() == StatusAgendamento.ATENDIDO) {
+					result.addError(new ObjectError("Agendamento", "Agendamento com o id" + agendamentoDto.getId() + " já foi atendido"));
+				}
+			}
+		}
+	}
+	
+	private void verificarStatusAtendimento(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
+		Optional<AtendimentoModel> atendimento = this.atendimentoService.buscarPorId(atendimentoDto.getId());
+		if (!atendimento.isPresent()) {
+			result.addError(new ObjectError("Atendimento", "Atendimento com o id" + atendimentoDto.getId() + " não encontrado"));
+		}
+		else if(atendimento.get().getSituacao() == StatusAtendimento.CONSOLIDADO){
+			result.addError(new ObjectError("Atendimento", "Atendimento consolidado, não pode ser alterado"));
 		}
 	}
 	

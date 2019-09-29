@@ -20,6 +20,7 @@ public class AtendimentoDTO {
 	private Double valTotalServicos;
 	private List<ServicosAtendimentoDTO> servicosAtendimentoDTO;
 	private List<ProdutosAtendimentoDTO> produtosAtendimentoDTO;
+	private List<AgendamentoDTO> agendamentoDtos;
 	private Long funcionarioId;
 	
 	public AtendimentoDTO() {
@@ -166,5 +167,14 @@ public class AtendimentoDTO {
 	public void setFuncionarioId(Long funcionarioId) {
 		this.funcionarioId = funcionarioId;
 	}
+
+	public List<AgendamentoDTO> getAgendamentoDtos() {
+		return agendamentoDtos;
+	}
+
+	public void setAgendamentoDtos(List<AgendamentoDTO> agendamentoDtos) {
+		this.agendamentoDtos = agendamentoDtos;
+	}
+	
 	
 }

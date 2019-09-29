@@ -1,5 +1,6 @@
 package br.com.integrado.api.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,7 +27,16 @@ public class AgendamentosService {
 	public AgendamentoModel salvar(AgendamentoModel agendamento) {
 		return this.agendamentoRepository.save(agendamento);
 	}
-	
+	public List<AgendamentoModel> salvar(List<AgendamentoModel> agendamentos) {
+		if (!agendamentos.isEmpty()) {
+			List<AgendamentoModel> agendamentosSalvos = new ArrayList<AgendamentoModel>();
+			for (AgendamentoModel agendamento : agendamentos) {
+				agendamentosSalvos.add(this.agendamentoRepository.save(agendamento));
+			}
+			return agendamentosSalvos;
+		}
+		return null;
+	}
 	public void deletar(Long id) {
 		this.agendamentoRepository.deleteById(id);
 	}

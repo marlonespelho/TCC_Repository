@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.integrado.api.enums.TipoBrinde;
@@ -15,20 +17,27 @@ public class BrindeGanhoModel {
 	private Long id;
 	private BrindeModel brinde;
 	private TipoBrinde tipoBrinde;
+	private ServicoAtendimentoModel servicoAtendimento;
 	
 	public BrindeGanhoModel() {
 	}
 			
-	public BrindeGanhoModel (BrindeModel brinde, TipoBrinde tipoBrinde) {
-		this.brinde = brinde;
-		this.tipoBrinde = tipoBrinde;
-	}	
-	
-	public BrindeGanhoModel(Long id, BrindeModel brinde, TipoBrinde tipoBrinde) {
+	public BrindeGanhoModel(BrindeModel brinde, TipoBrinde tipoBrinde,
+			ServicoAtendimentoModel servicoAtendimento) {
 		this.id = id;
 		this.brinde = brinde;
 		this.tipoBrinde = tipoBrinde;
+		this.servicoAtendimento = servicoAtendimento;
 	}
+	
+	public BrindeGanhoModel(Long id, BrindeModel brinde, TipoBrinde tipoBrinde,
+			ServicoAtendimentoModel servicoAtendimento) {
+		this.id = id;
+		this.brinde = brinde;
+		this.tipoBrinde = tipoBrinde;
+		this.servicoAtendimento = servicoAtendimento;
+	}
+
 	
 	@Id
 	@GeneratedValue
@@ -53,6 +62,16 @@ public class BrindeGanhoModel {
 	}
 	public void setTipoBrinde(TipoBrinde tipoBrinde) {
 		this.tipoBrinde = tipoBrinde;
+	}
+
+	@OneToOne
+	@JoinColumn(name = "serv_atend_id")
+	public ServicoAtendimentoModel getServicoAtendimento() {
+		return servicoAtendimento;
+	}
+
+	public void setServicoAtendimento(ServicoAtendimentoModel servicoAtendimento) {
+		this.servicoAtendimento = servicoAtendimento;
 	}
 	
 	

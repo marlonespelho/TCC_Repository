@@ -1,13 +1,12 @@
 package br.com.integrado.api.dtos;
 
-import br.com.integrado.api.enums.StatusAgendamento;
-
 public class AgendamentoDTO {
 	private Long id;
 	private Long agenda;
 	private Long cliente;
 	private String horaInicio;
 	private String horaFim;
+	private Long idAtendimento;
 	private int status;
 	
 	public AgendamentoDTO() {
@@ -68,6 +67,13 @@ public class AgendamentoDTO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	
+
+	public Long getIdAtendimento() {
+		return idAtendimento;
+	}
+
+	public void setIdAtendimento(Long idAtendimento) {
+		this.idAtendimento = idAtendimento;
+	}
+
 }

@@ -16,6 +16,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.integrado.api.enums.StatusAgendamento;
+/**
+ * @author marlo
+ *
+ */
 @Entity
 @Table(name = "agendamento")
 public class AgendamentoModel implements Serializable{
@@ -125,10 +129,20 @@ public class AgendamentoModel implements Serializable{
 		this.status = status;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "id_atendimento")
+	public AtendimentoModel getAtendimento() {
+		return atendimento;
+	}
+
+	public void setAtendimento(AtendimentoModel atendimento) {
+		this.atendimento = atendimento;
+	}
+
 	@Override
 	public String toString() {
 		return "AgendamentoModel [id=" + id + ", agenda=" + agenda + ", cliente=" + cliente + ", horaInicio="
-				+ horaInicio + ", horaFim=" + horaFim + ", status=" + status + ", atendimento=" + "]";
+				+ horaInicio + ", horaFim=" + horaFim + ", status=" + status + ", atendimento=" + atendimento + "]";
 	}
 	
 }

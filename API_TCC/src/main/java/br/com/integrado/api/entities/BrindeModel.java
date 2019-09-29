@@ -26,7 +26,6 @@ public class BrindeModel implements Serializable{
 	private BrindeConfigModel brindeConfig;
 	
 	public BrindeModel() {
-
 	}
 	
 	public BrindeModel(ClienteModel cliente, ServicoModel servico, Integer contadorBrinde, Date dataBrindeAniversario, BrindeConfigModel brindeConfig) {

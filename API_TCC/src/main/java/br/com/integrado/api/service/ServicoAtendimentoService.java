@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import br.com.integrado.api.dtos.ServicosAtendimentoDTO;
 import br.com.integrado.api.entities.ServicoAtendimentoModel;
 import br.com.integrado.api.repositories.ServicoAtendimentoRepository;
 
@@ -22,13 +23,40 @@ public class ServicoAtendimentoService {
 	}
 	
 	public  List<ServicoAtendimentoModel> salvar(List<ServicoAtendimentoModel>  servicosAtendimento) {
-		List<ServicoAtendimentoModel> servicosAtendimentoModel = new ArrayList<ServicoAtendimentoModel>();
-		for (ServicoAtendimentoModel servicoAtendimento : servicosAtendimento) {
-			servicosAtendimentoModel.add(this.servicoAtendimentoRepository.save(servicoAtendimento));
+		if (!servicosAtendimento.isEmpty()) {
+			if (servicosAtendimento.get(0).getAtendimento() != null) {
+				this.deletarServicosForaDaLista(servicosAtendimento);
+			}
+			List<ServicoAtendimentoModel> servicosAtendimentoModel = new ArrayList<ServicoAtendimentoModel>();
+			for (ServicoAtendimentoModel servicoAtendimento : servicosAtendimento) {
+				servicosAtendimentoModel.add(this.servicoAtendimentoRepository.save(servicoAtendimento));
+			}
+			return servicosAtendimentoModel;
 		}
-		return servicosAtendimentoModel;
+		return null;
 	}
 	
+	private void deletarServicosForaDaLista(List<ServicoAtendimentoModel> servicosAtendimento) {
+		List<ServicoAtendimentoModel> servicosSalvos = this.buscarPorAtendimentoId(servicosAtendimento.get(0).getAtendimento().getId());
+		for (ServicoAtendimentoModel servicoSalvo : servicosSalvos) {
+			Boolean validador = false;
+			int cont = 1;
+			for (ServicoAtendimentoModel servico : servicosAtendimento) {
+				if (servico.getId() == servicoSalvo.getId()) {
+					validador = true;
+					break;
+				}
+				if (cont == servicosSalvos.size() && !validador) {
+					this.deletar(servicoSalvo);
+					break;
+				}
+				cont++;
+			}
+			validador = false;
+			cont = 1;
+		}
+		}
+
 	public void deletar(Long id) {
 		this.servicoAtendimentoRepository.deleteById(id);
 	}

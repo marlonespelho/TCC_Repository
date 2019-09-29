@@ -12,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import br.com.integrado.api.entities.BrindeGanhoModel;
 import br.com.integrado.api.entities.BrindeModel;
 import br.com.integrado.api.entities.ClienteModel;
+import br.com.integrado.api.entities.ServicoAtendimentoModel;
+import br.com.integrado.api.enums.TipoBrinde;
 import br.com.integrado.api.repositories.BrindeRepository;
 import br.com.integrado.api.repositories.ClienteRepository;
 
@@ -23,6 +27,8 @@ public class BrindeService {
 	private BrindeRepository brindeRepository;
 	@Autowired
 	private ClienteRepository clienteRepository;
+	@Autowired 
+	private BrindeGanhoService brindeGanhoService;
 	
 	public BrindeModel salvar(BrindeModel brinde) {
 		return this.brindeRepository.save(brinde);
@@ -58,7 +64,6 @@ public class BrindeService {
 		GregorianCalendar aniversario = new GregorianCalendar();
 		aniversario.setTime(cliente.getDtNascimento());
 		aniversario.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-
 		for (BrindeModel brinde : brindes) {
 			GregorianCalendar ultimoBrinde = new GregorianCalendar();
 			ultimoBrinde.setTime(brinde.getDataBrindeAniversario());
@@ -70,6 +75,42 @@ public class BrindeService {
 			}
 		}
 		return true;
+	}
+	
+	public void movimentarBrindes(List<ServicoAtendimentoModel> servicosAtendimento) {
+		for (ServicoAtendimentoModel servicoAtendimento : servicosAtendimento) {
+			BrindeModel brinde = this.buscarPorClienteEServico(servicoAtendimento.getAtendimento().getCliente().getId(), 
+												servicoAtendimento.getServico().getId()).get();
+			if (brinde.getBrindeConfig().getBrindeFidelidade() || !this.verificarBrindeAniversarioExistente(servicoAtendimento)) {
+				if ((brinde.getContadorBrinde() + servicoAtendimento.getQuantidade()) > brinde.getBrindeConfig().getQuantContador()) {
+					this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.FIDELIDADE, servicoAtendimento));
+					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade() - 
+												brinde.getBrindeConfig().getQuantContador() - 1);
+					this.salvar(brinde);
+				}
+				else{
+					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade() - 
+												brinde.getBrindeConfig().getQuantContador());
+					this.salvar(brinde);	
+				}
+			}
+		}
+	}
+	
+	public Boolean verificarBrindeAniversarioExistente(ServicoAtendimentoModel servicoAtendimento) {
+		Optional<BrindeGanhoModel> brindeGanho = this.brindeGanhoService.buscarPorServicoAtendimentoId(servicoAtendimento.getId());
+		if (!brindeGanho.isPresent()) {
+			return false;
+		} else if (brindeGanho.get().getTipoBrinde() == TipoBrinde.ANIVERSARIO) {
+			return true;
+		}
+		return false;
+	}
+
+	public void disponibilizarBrindeAniversario( ServicoAtendimentoModel servicoAtendimento) {
+		BrindeModel brinde = this.buscarPorClienteEServico(servicoAtendimento.getAtendimento().getCliente().getId(), 
+															servicoAtendimento.getServico().getId()).get();
+		this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.ANIVERSARIO, servicoAtendimento));
 	}
 	
 }

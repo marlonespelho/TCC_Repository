@@ -23,13 +23,38 @@ public class ProdutoAtendimentoService {
 	}
 	
 	public List<ProdutoAtendimentoModel> salvar(List<ProdutoAtendimentoModel> produtos) {
-		List<ProdutoAtendimentoModel> produtosAtendimento = new ArrayList<ProdutoAtendimentoModel>();
-		for (ProdutoAtendimentoModel produtoAtendimento : produtos) {
-			produtosAtendimento.add(this.produtoAtendimentoRepository.save(produtoAtendimento)); 
+		if (!produtos.isEmpty()) {
+			if (produtos.get(0).getAtendimento() != null) {
+				this.deletarProdutosForaDaLista(produtos);
+			}
+			List<ProdutoAtendimentoModel> produtosAtendimento = new ArrayList<ProdutoAtendimentoModel>();
+			for (ProdutoAtendimentoModel produtoAtendimento : produtos) {
+				produtosAtendimento.add(this.produtoAtendimentoRepository.save(produtoAtendimento)); 
+			}
+			return produtosAtendimento;
 		}
-		return produtosAtendimento;
+		return null;
 	}
 	
+	private void deletarProdutosForaDaLista(List<ProdutoAtendimentoModel> produtos) {
+		List<ProdutoAtendimentoModel> produtosSalvos = this.buscarPorAtendimentoId(produtos.get(0).getId());
+		for (ProdutoAtendimentoModel produtoSalvo : produtosSalvos) {
+			Boolean validador = false;
+			int cont = 1;
+			for (ProdutoAtendimentoModel produto : produtos) {
+				if (produto.getId() == produtoSalvo.getId()) {
+					validador = true;
+					break;
+				}
+				if (cont == produtosSalvos.size() && !validador) {
+					this.deletar(produtoSalvo);
+					break;
+				}
+				cont++;
+			}
+		}
+	}
+
 	public void deletar(ProdutoAtendimentoModel produto) {
 		this.produtoAtendimentoRepository.delete(produto);
 	}

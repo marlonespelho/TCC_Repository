@@ -1,7 +1,7 @@
 package br.com.integrado.api.enums;
 
-public enum TipoBrinde {
-	FIDELIDADE(1), ANIVERSARIO(2);
+public enum TipoMovimentacao {
+	ATENDIMENTO(1), ENTRADA(2), BAIXA(3);
 	
 private int tipo;
 	
@@ -9,13 +9,13 @@ private int tipo;
 		return tipo;
 	}
 	
-	TipoBrinde(int tipo){
+	TipoMovimentacao(int tipo){
 		this.tipo = tipo;
 	}
 	
-	public static TipoBrinde ObterTipoPorId(int id) {
+	public static TipoMovimentacao ObterTipoPorId(int id) {
 		try {
-			for(TipoBrinde tipo : values()) {
+			for(TipoMovimentacao tipo : values()) {
 				if (tipo.tipo == id) {
 					return tipo;
 				}
