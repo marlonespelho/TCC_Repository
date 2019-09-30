@@ -44,6 +44,7 @@ import br.com.integrado.api.service.ClienteService;
 import br.com.integrado.api.service.FormaPagamentoService;
 import br.com.integrado.api.service.FuncionarioService;
 import br.com.integrado.api.service.MovEstoqueService;
+import br.com.integrado.api.service.ParcelaAtendimentoService;
 import br.com.integrado.api.service.ProdutoAtendimentoService;
 import br.com.integrado.api.service.ProdutoService;
 import br.com.integrado.api.service.ServicoAtendimentoService;
@@ -84,6 +85,8 @@ public class AtendimentoController {
 	private AgendamentosService agendamentosService;
 	@Autowired
 	private MovEstoqueService estoqueService;
+	@Autowired
+	private ParcelaAtendimentoService parcelaAtendimentoService;
 	private DataUtils dataUtils = new DataUtils();
 	
 	@PostMapping
@@ -129,7 +132,7 @@ public class AtendimentoController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@PutMapping
+	@PutMapping(value = "/consolidar")
 	public ResponseEntity<Response<AtendimentoDTO>> consolidar(@Valid @RequestBody AtendimentoDTO atendimentoDto,
 			BindingResult result) throws NoSuchAlgorithmException{
 		Response<AtendimentoDTO> response = new Response<AtendimentoDTO>();
@@ -148,6 +151,7 @@ public class AtendimentoController {
 		List<ServicoAtendimentoModel> servicos = this.servicoAtendimentoService.salvar(this.converterDtoEmServicoAtendimento(atendimentoDto, atendimento));
 		this.movimentarBrindes(servicos, atendimentoDto);
 		this.agendamentosService.salvar(this.converterDtoEmAgendamentos(atendimentoDto, atendimento));
+		this.parcelaAtendimentoService.gerarParcelas(atendimento, atendimentoDto.getTipoPagamentoId(), atendimentoDto.getFormaPagamentoId());
 		response.setData(this.converterAtendimentoEmDTO(atendimento, atendimentoDto));
 		return ResponseEntity.ok(response);
 	}
@@ -164,11 +168,12 @@ public class AtendimentoController {
 					this.brindeService.disponibilizarBrindeAniversario(servico);
 				}
 			}
+			this.brindeService.movimentarBrindes(servicos);
 	}
 
 	private List<AgendamentoModel> converterDtoEmAgendamentos(@Valid AtendimentoDTO atendimentoDto,
 			AtendimentoModel atendimento) {
-		if (!atendimentoDto.getAgendamentoDtos().isEmpty()) {
+		if (atendimentoDto.getAgendamentoDtos() != null) {
 			List<AgendamentoModel> agendamentos = new ArrayList<AgendamentoModel>();
 			for (AgendamentoDTO agendamentoDto : atendimentoDto.getAgendamentoDtos()) {
 				AgendamentoModel agendamento = this.agendamentosService.buscarPorId(agendamentoDto.getId()).get();
@@ -267,11 +272,12 @@ public class AtendimentoController {
 		for (ServicosAtendimentoDTO servicoAtendimentoDto : servicosAtendimentoDTO) {
 			ServicoModel servico = this.servicoService.buscarPorId(servicoAtendimentoDto.getServicoId()).get();
 			total += servicoAtendimentoDto.getQuantidade() * servico.getValor();
+			BrindeModel brinde = this.verificarBrindeFidelidade(servico, clienteId,servicoAtendimentoDto.getQuantidade());
 			if (servicoAtendimentoDto.getBrindeAniversario()) {
 				total -= servico.getValor();
 			}
-			else if (this.verificarBrindeFidelidade(servico, clienteId,servicoAtendimentoDto.getQuantidade())) {
-				total -= servico.getValor();
+			else if (brinde != null) {
+				total -= ((brinde.getContadorBrinde() + servicoAtendimentoDto.getQuantidade())/ brinde.getBrindeConfig().getQuantContador()) * servico.getValor();
 			}
 		}
 		return total;
@@ -299,12 +305,12 @@ public class AtendimentoController {
 		}
 	}
 	
-	private boolean verificarBrindeFidelidade(ServicoModel servico, Long clienteId, Integer quantidade) {
+	private BrindeModel verificarBrindeFidelidade(ServicoModel servico, Long clienteId, Integer quantidade) {
 		BrindeModel brinde = this.brindeService.buscarPorClienteEServico(clienteId, servico.getId()).get();
 		if (brinde.getBrindeConfig().getBrindeFidelidade() && (quantidade + brinde.getContadorBrinde())> brinde.getBrindeConfig().getQuantContador()) {
-			return true;
+			return brinde;
 		}
-		return false;
+		return null;
 	}
 
 	private void validarServicos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
@@ -355,7 +361,7 @@ public class AtendimentoController {
 	}
 	
 	private void validarAgendamentos(@Valid AtendimentoDTO atendimentoDto, BindingResult result) {
-		if (atendimentoDto.getAgendamentoDtos().isEmpty()) {
+		if (atendimentoDto.getAgendamentoDtos() != null) {
 			for (AgendamentoDTO agendamentoDto : atendimentoDto.getAgendamentoDtos()) {
 				Optional<AgendamentoModel> agendamento = this.agendamentosService.buscarPorId(agendamentoDto.getId());
 				if (!agendamento.isPresent()) {

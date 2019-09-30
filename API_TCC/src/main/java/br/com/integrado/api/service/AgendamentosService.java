@@ -28,7 +28,7 @@ public class AgendamentosService {
 		return this.agendamentoRepository.save(agendamento);
 	}
 	public List<AgendamentoModel> salvar(List<AgendamentoModel> agendamentos) {
-		if (!agendamentos.isEmpty()) {
+		if (agendamentos != null) {
 			List<AgendamentoModel> agendamentosSalvos = new ArrayList<AgendamentoModel>();
 			for (AgendamentoModel agendamento : agendamentos) {
 				agendamentosSalvos.add(this.agendamentoRepository.save(agendamento));

@@ -18,24 +18,26 @@ public class BrindeGanhoModel {
 	private BrindeModel brinde;
 	private TipoBrinde tipoBrinde;
 	private ServicoAtendimentoModel servicoAtendimento;
+	private Integer quantidade;
 	
 	public BrindeGanhoModel() {
 	}
 			
 	public BrindeGanhoModel(BrindeModel brinde, TipoBrinde tipoBrinde,
-			ServicoAtendimentoModel servicoAtendimento) {
-		this.id = id;
+			ServicoAtendimentoModel servicoAtendimento, Integer quantidade) {
 		this.brinde = brinde;
 		this.tipoBrinde = tipoBrinde;
 		this.servicoAtendimento = servicoAtendimento;
+		this.quantidade = quantidade;
 	}
 	
 	public BrindeGanhoModel(Long id, BrindeModel brinde, TipoBrinde tipoBrinde,
-			ServicoAtendimentoModel servicoAtendimento) {
+			ServicoAtendimentoModel servicoAtendimento, Integer quantidade) {
 		this.id = id;
 		this.brinde = brinde;
 		this.tipoBrinde = tipoBrinde;
 		this.servicoAtendimento = servicoAtendimento;
+		this.quantidade = quantidade;
 	}
 
 	
@@ -73,7 +75,14 @@ public class BrindeGanhoModel {
 	public void setServicoAtendimento(ServicoAtendimentoModel servicoAtendimento) {
 		this.servicoAtendimento = servicoAtendimento;
 	}
-	
-	
+
+	@Column
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
 	
 }

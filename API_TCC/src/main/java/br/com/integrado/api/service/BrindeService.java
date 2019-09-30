@@ -83,14 +83,19 @@ public class BrindeService {
 												servicoAtendimento.getServico().getId()).get();
 			if (brinde.getBrindeConfig().getBrindeFidelidade() || !this.verificarBrindeAniversarioExistente(servicoAtendimento)) {
 				if ((brinde.getContadorBrinde() + servicoAtendimento.getQuantidade()) > brinde.getBrindeConfig().getQuantContador()) {
-					this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.FIDELIDADE, servicoAtendimento));
-					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade() - 
-												brinde.getBrindeConfig().getQuantContador() - 1);
+					int quantBrinde = (brinde.getContadorBrinde() + servicoAtendimento.getQuantidade()) / 
+										brinde.getBrindeConfig().getQuantContador();
+					brinde.setContadorBrinde(((brinde.getContadorBrinde() + servicoAtendimento.getQuantidade()) % 
+												brinde.getBrindeConfig().getQuantContador()) - quantBrinde);
+					this.salvar(brinde);
+					this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.FIDELIDADE, servicoAtendimento, quantBrinde));
+				}
+				else if(this.verificarBrindeAniversarioExistente(servicoAtendimento) && servicoAtendimento.getQuantidade() > 1) {
+					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade() - 1);
 					this.salvar(brinde);
 				}
 				else{
-					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade() - 
-												brinde.getBrindeConfig().getQuantContador());
+					brinde.setContadorBrinde(brinde.getContadorBrinde() + servicoAtendimento.getQuantidade());
 					this.salvar(brinde);	
 				}
 			}
@@ -110,7 +115,7 @@ public class BrindeService {
 	public void disponibilizarBrindeAniversario( ServicoAtendimentoModel servicoAtendimento) {
 		BrindeModel brinde = this.buscarPorClienteEServico(servicoAtendimento.getAtendimento().getCliente().getId(), 
 															servicoAtendimento.getServico().getId()).get();
-		this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.ANIVERSARIO, servicoAtendimento));
+		this.brindeGanhoService.salvar(new BrindeGanhoModel(brinde, TipoBrinde.ANIVERSARIO, servicoAtendimento, 1));
 	}
 	
 }

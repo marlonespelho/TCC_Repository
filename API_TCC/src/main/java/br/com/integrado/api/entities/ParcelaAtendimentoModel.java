@@ -46,6 +46,16 @@ public class ParcelaAtendimentoModel implements Serializable{
 		this.tpPagamento = tpPagamento;
 		this.atendimento = atendimento;
 	}
+	
+	public ParcelaAtendimentoModel(AtendimentoModel atendimento, Date dtVencimento, Double valParcela,
+			Double valPago,	FormaPagamentoModel fmPagamento, TipoPagamentoModel tpPagamento) {
+		this.dtVencimento = dtVencimento;
+		this.valParcela = valParcela;
+		this.valPago = valPago;
+		this.fmPagamento = fmPagamento;
+		this.tpPagamento = tpPagamento;
+		this.atendimento = atendimento;
+	}
 
 	public ParcelaAtendimentoModel(Long id, AtendimentoModel atendimento, ParcelaAtendimentoModel parcPrincipal, Date dtVencimento, Double valParcela, Double valPago,
 			Date dtPago, FormaPagamentoModel fmPagamento, TipoPagamentoModel tpPagamento) {
