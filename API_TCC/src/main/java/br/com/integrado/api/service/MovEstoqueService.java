@@ -21,11 +21,13 @@ public class MovEstoqueService {
 	private ProdutoService produtoService;
 	
 	public List<MovEstoqueModel> movimentarAtendimento(List<ProdutoAtendimentoModel> produtosAtendimento) {
-		if (!produtosAtendimento.isEmpty()) {
+		if (produtosAtendimento != null) {
 			List<MovEstoqueModel> movimentacoes = new ArrayList<MovEstoqueModel>();
 			for (ProdutoAtendimentoModel produtoAtendimento : produtosAtendimento) {
-				movimentacoes.add(this.salvar(new MovEstoqueModel(new Date(), "Baixa através do atendimento n° " + produtoAtendimento.getAtendimento().getId(), 
-						produtoAtendimento, TipoMovimentacao.ATENDIMENTO)));
+				MovEstoqueModel movEstoque = new MovEstoqueModel(new Date(), "Baixa através do atendimento n° " + produtoAtendimento.getAtendimento().getId(), 
+						produtoAtendimento, TipoMovimentacao.ATENDIMENTO);
+				movimentacoes.add(this.salvar(movEstoque));
+				this.movimentarEstoque(movEstoque);
 			}
 			return movimentacoes;
 		}

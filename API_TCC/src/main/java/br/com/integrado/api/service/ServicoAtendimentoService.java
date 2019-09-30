@@ -23,7 +23,7 @@ public class ServicoAtendimentoService {
 	}
 	
 	public  List<ServicoAtendimentoModel> salvar(List<ServicoAtendimentoModel>  servicosAtendimento) {
-		if (!servicosAtendimento.isEmpty()) {
+		if (servicosAtendimento != null) {
 			if (servicosAtendimento.get(0).getAtendimento() != null) {
 				this.deletarServicosForaDaLista(servicosAtendimento);
 			}

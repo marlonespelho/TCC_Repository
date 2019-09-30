@@ -63,7 +63,7 @@ public class MovEstoqueModel implements Serializable{
 		this.id = id;
 		this.dtMovimentacao = dtMovimentacao;
 		this.descricao = descricao;
-		this.quantidade = quantidade;
+		this.produtoAtendimento = produtoAtendimento;
 		this.tipoMovimentacao = tipoMovimentacao;
 	}
 
@@ -114,7 +114,7 @@ public class MovEstoqueModel implements Serializable{
 	}
 	
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = true)
 	public ProdutoModel getProduto() {
 		return produto;
 	}

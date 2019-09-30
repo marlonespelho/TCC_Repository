@@ -23,7 +23,7 @@ public class ProdutoAtendimentoService {
 	}
 	
 	public List<ProdutoAtendimentoModel> salvar(List<ProdutoAtendimentoModel> produtos) {
-		if (!produtos.isEmpty()) {
+		if (produtos != null) {
 			if (produtos.get(0).getAtendimento() != null) {
 				this.deletarProdutosForaDaLista(produtos);
 			}
