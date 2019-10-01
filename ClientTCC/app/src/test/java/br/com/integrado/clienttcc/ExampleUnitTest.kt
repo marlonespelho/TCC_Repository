@@ -1,4 +1,4 @@
-package com.example.clienttcc
+package br.com.integrado.clienttcc
 
 import org.junit.Test
 
